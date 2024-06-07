@@ -55,5 +55,28 @@ int main()
     cout << "|"<< setw(20)<< setiosflags(ios::scientific)<< 1452.256 << endl ;
     cout <<fixed<<setprecision(3)<< 145.25447552<<endl;
     cout <<"Base oct "<<0x01000f<<endl; // this will convert to decimal
+    string emailAddress = "", provider= "",domain = "";
+    cout <<"Enter your email" <<endl ;
+    getline(cin,emailAddress,'@');
+    getline(cin,provider,'.');
+    getline(cin,domain);
+    cout << "your email address \n"
+         << " Email Address : "<< emailAddress<<endl
+         << " Provider : "<<provider<<endl
+         << " domain : "<<domain<<endl;
+    cout << "Enter either National security number or Full Name as your identifier \n" ;
+    string line1;
+    getline(cin,line1);
+    istringstream iss1(line1);
+    char ch = iss1.peek();
+    if(!isdigit(ch)){
+        cout << "It's a string.\n\n";
+    }else {
+        cout << "It's a number.\n\n";
+    }
+    int a = 11 ;
+    bool bCompare = (a == 11.0) ;
+    cout <<"11 == 11.0 : "<<bCompare<<endl;
+
 	return 0;
 }
