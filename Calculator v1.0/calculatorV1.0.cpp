@@ -2,31 +2,19 @@
 #include <iomanip>
 
 using namespace std;
-int main()
+void fCheckNumb(double &iNum)
 {
-    cout << "CALCULATOR V 1.0" << endl;
-    cout << "Enter the first number" << endl;
-    int iNum1 = 0;
-    cin >> iNum1;
+    cin >> iNum;
     while (cin.fail())
     {
         cout << "Invalid input try again" << endl;
         cin.clear();
         cin.ignore(10000, '\n');
-        cin >> iNum1;
+        cin >> iNum;
     }
-    cout << "Enter the second number" << endl;
-    int iNum2 = 0;
-    cin >> iNum2;
-    while (cin.fail())
-    {
-        cout << "Invalid input try again" << endl;
-        cin.clear();
-        cin.ignore(10000, '\n');
-        cin >> iNum2;
-    }
-    cout << "Enter your operation type character \n";
-    char cO = '1';
+}
+void fCheckOperation(char &cO)
+{
     cin >> cO;
     while (cin.fail() || (cO != '+' && cO != '-' && cO != '*' && cO != '/'))
     {
@@ -35,6 +23,18 @@ int main()
         cin.ignore(10000, '\n');
         cin >> cO;
     }
+}
+int main()
+{
+    cout << "CALCULATOR V 1.0" << endl;
+    cout << "Enter the first number" << endl;
+    double iNum1 ,iNum2= 0;
+    fCheckNumb(iNum1);
+    cout << "Enter the second number" << endl;
+    fCheckNumb(iNum2);
+    cout << "Enter your operation type character \n";
+    char cO = '/';
+    fCheckOperation(cO);
     switch (cO)
     {
     case '+':
@@ -47,22 +47,15 @@ int main()
         cout << "the result of multiplication of " << iNum1 << " * " << iNum2 << " = " << iNum1 * iNum2 << endl;
         break;
     case '/':
-        if (iNum2 == 0)
+        if ((int)iNum2 == 0)
         {
             cout << "You can't divide by 0, Enter the second number again \n";
-            cin >> iNum2;
-            while (cin.fail())
-            {
-                cout << "Invalid input try again" << endl;
-                cin.clear();
-                cin.ignore(10000, '\n');
-                cin >> iNum2;
-            }
-            cout << "the result of division of " << iNum1 << " / " << iNum2 << " = " << (float)iNum1 / iNum2 << endl;
+            fCheckNumb(iNum2);
+            cout << "the result of division of " << iNum1 << " / " << iNum2 << " = " << iNum1 / iNum2 << endl;
         }
         else
         {
-            cout << "the result of division of " << iNum1 << " / " << iNum2 << " = " << (float)iNum1 / iNum2 << endl;
+            cout << "the result of division of " << iNum1 << " / " << iNum2 << " = " << iNum1 / iNum2 << endl;
         }
         break;
     }
