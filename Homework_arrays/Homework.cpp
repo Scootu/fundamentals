@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cctype>
 #include <limits>
+#include <assert.h>
 using namespace std;
 
 int ConvertToInt(const char* sNumber)
@@ -56,15 +57,20 @@ void Grouping(const char* sequence) // 111222365ffff887f45f
     }
 
 }
-bool LessThan(const char* str1, const char* str2) {
+bool LessThan(const char* str1, const char* str2)
+{
     // Check for null pointers
     assert(str1 != nullptr && str2 != nullptr);
 
     // Compare characters until the end of one of the strings
-    while (*str1 != '\0' && *str2 != '\0') {
-        if (*str1 < *str2) {
+    while (*str1 != '\0' && *str2 != '\0')
+    {
+        if (*str1 < *str2)
+        {
             return true;
-        } else if (*str1 > *str2) {
+        }
+        else if (*str1 > *str2)
+        {
             return false;
         }
         str1++;
@@ -72,7 +78,8 @@ bool LessThan(const char* str1, const char* str2) {
     }
 
     // If str1 is shorter than str2, it is lexicographically smaller
-    if (*str1 == '\0' && *str2 != '\0') {
+    if (*str1 == '\0' && *str2 != '\0')
+    {
         return true;
     }
 
@@ -82,45 +89,64 @@ bool LessThan(const char* str1, const char* str2) {
 
 // I lose my main file for no risen just codeblocks crash and a lost a lot of solutions and this what i get
 
-string add9999(string num) {
-    // Check if it's a number
+string add9999(string num)
+{
+
+// Check if it's a number
     int i = 0, k = 0, sum = 0;
     int cnt = 1;
     string sSum = "", sNum = "";
 
-    // Find the length of the string
-    while (num[i] != '\0') {
+// Find the length of the string
+    while (num[i] != '\0')
+    {
         i++;
     }
+    int t = 0;
+    if(i>=6)
+    {
+        for (;t < 6; t++)
+        {
+            sNum += num[t+(i-6)];
+        }
+    }
+    else
+    {
+        // Get the first 6 digits
+        for (; t < 6; t++)
+        {
+            sNum += num[t];
+        }
 
-    // Ensure the input has at least 6 digits
-    assert(i >= 6);
-
-    // Get the first 6 digits
-    for (int t = 0; t < 6; t++) {
-        sNum += num[t];
     }
 
-    // Convert sNum to an integer
-    for (int j = 5; j >= 0; j--) {
+// Convert sNum to an integer
+    for (int j = t -1 ; j >= 0; j--)
+    {
         sum = sum + (sNum[j] - '0') * cnt;
         cnt *= 10;
     }
 
-    // Add 9999 to the integer
+// Add 9999 to the integer
     sum += 9999;
-
-    // Convert the sum back to a string
-    while (sum > 0) {
+    cout <<sum<<endl;
+// Convert the sum back to a string
+    while (sum > 0)
+    {
         sSum = char(sum % 10 + '0') + sSum;
         sum = sum / 10;
+        k++;
     }
-
-    // Ensure the result has at least 6 characters
-    while (sSum.length() < 6) {
+    while(k<t)
+    {
         sSum = '0' + sSum;
+        k++;
     }
-
+    for(int z = (i-6)-1;z<=0;z--){
+        sSum = num[z] + sSum;
+    }
+    cout <<num<<endl;
+    cout <<sSum<<endl;
     return sSum;
 }
 
@@ -137,6 +163,6 @@ int main()
     //Grouping function
     const char* test4 = "111222365ffff887f45f";
     Grouping(test4);
-
+    cout<<add9999("10000000000")<<endl;
     return 0 ;
 }
