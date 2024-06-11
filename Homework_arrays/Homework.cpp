@@ -3,6 +3,8 @@
 #include <limits>
 #include <assert.h>
 #include <vector>
+#include <algorithm>
+#include <chrono>
 using namespace std;
 
 int ConvertToInt(const char *sNumber)
@@ -148,19 +150,22 @@ string add9999(string num)
     }
     return sSum;
 }
-vector<int> sumQuery(int arr[], int size1, int queries[][2], int size2) {
+vector<int> sumQuery(int arr[], int size1, int queries[][2], int size2)
+{
     vector<int> results(size2, 0); // Initialize results with the number of queries
 
     int accArray[size1] = {0};
     accArray[0] = arr[0];
     cout << accArray[0] << " " ;
-    for(int i= 1;i<size1;++i){
+    for(int i= 1; i<size1; ++i)
+    {
         accArray[i] = arr[i] + accArray[i-1];
         cout << arr[i] + accArray[i-1] << " " ;
     }
     cout <<endl;
     // Process each query
-    for (int i = 0; i < size2; ++i) { //O(n)
+    for (int i = 0; i < size2; ++i)   //O(n)
+    {
         int start = queries[i][0];
         int iEnd = queries[i][1];
 
@@ -173,8 +178,50 @@ vector<int> sumQuery(int arr[], int size1, int queries[][2], int size2) {
 
     return results;
 }
+bool searchNum(int arr[],int size,int num) // 10 elements sorted
+{
+    int md= size / 2 ;
+    if(num > md)
+    {
+        for(int i = md; i<size; ++i) // O(n)
+        {
+            if(arr[i] == num)
+            {
+                return true;
+            }
+        }
+    }
+    else
+    {
+        for(int i = 0; i<md; ++i) // O(n)
+        {
+            if(arr[i] == num)
+            {
+                return true;
+            }
+        }
+    }
+
+
+    return false;
+}
+bool nonsortedSearchNum(int arr[],int size,int num)
+{
+    for(int i = 0; i<size; ++i) // O(n)
+    {
+        if(arr[i] == num)
+        {
+            return true;
+        }
+    }
+    return false ;
+}
 int main()
 {
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
     const char *test1 = "12345";
     cout << ConvertToInt(test1) << endl;
 
@@ -195,9 +242,23 @@ int main()
     int queries[3][2] = {{0,4},{1,3}}; // 93 8
     vector<int> results(2);
     results = sumQuery(arr,7,queries,2);
-    for(int num:results){
+    for(int num:results)
+    {
         cout << num <<" "; // 10 82
     }
+    cout <<endl;
+    int testArraySorted[] = {1, 4, 7, 9, 10, 12, 15, 18, 20, 22, 23, 25, 27, 29, 32, 34, 35, 37, 39, 40, 42, 44, 46, 48, 49, 50, 52, 54, 56, 58, 60, 62, 63, 65, 67, 69, 70, 72, 74, 76, 78, 79, 81, 83, 85, 87, 88, 90, 92, 94, 95, 97, 99, 101, 103, 105, 107, 109, 110, 112, 114, 116, 118, 120, 122, 124, 126, 127, 129, 131, 133, 135, 137, 139, 140, 142, 144, 146, 148, 150, 152, 153, 155, 157, 159, 160, 162, 164, 166, 168, 170, 172, 174, 176, 178, 179, 181, 183, 185, 187};
+    auto t1 = high_resolution_clock::now();
+    cout <<searchNum(testArraySorted,100,78)<<endl; // 0.0527ms
+    // cout <<nonsortedSearchNum(testArraySorted,100,78)<<endl; // 0.0507ms
+    auto t2 = high_resolution_clock::now();
+
+    /* Getting number of milliseconds as an integer. */
+    auto ms_int = duration_cast<milliseconds>(t2 - t1);
+
+    /* Getting number of milliseconds as a double. */
+    duration<double, std::milli> ms_double = t2 - t1;
+    std::cout << ms_double.count() << "ms\n";
 
     return 0;
 }
