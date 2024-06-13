@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <chrono>
 #include <cmath>
+
 using namespace std;
 
 int ConvertToInt(const char *sNumber)
@@ -319,7 +320,6 @@ void bigFactorial(int fac)
             reversedFac[j] = prod % 10; // Store last digit of the product in current cell
             carry = prod / 10; // Carry over the remaining part
         }
-
         // Process the remaining carry
         while (carry)
         {
@@ -336,7 +336,198 @@ void bigFactorial(int fac)
     }
     cout << endl;
 }
+vector<bool> sieveAlgorithmSqrt(int iN)
+{
+    // Create an array boolean of length iN
+    vector<bool> arr(iN,true);
+    vector<bool> arr2(iN,true);
+    arr[0] = arr[1] = false ;
+    arr2[0] = arr[1] = false;
+    for(int i = 2; i<= sqrt(iN); ++i)   // O(sqrt(iN)*iN)
+    {
+        for(int j = i*2 ; j < iN ; j*=2)  // 6 12 24
+        {
 
+            if(arr[j] == true && j % i == 0)
+            {
+                arr[j] = false ; // every multiply of 2 of i put it false
+                arr2[j] = false;
+            }
+        }
+
+    }
+    for(int i = 2; i< iN / 2; ++i) // for the first primes numbers O(iN/2)
+    {
+        if(arr[i] == true)
+        {
+            arr2[i*2] = false;
+        }
+    }
+    /*
+      cout << "primes numbers of range : " <<iN <<endl;
+      //Print the primes numbers
+      for(int i = 2 ; i <iN ; ++i)
+      {
+          if(arr2[i] == true)
+          {
+              cout << i << " ";
+          }
+      }
+      cout <<endl;
+     */
+    return arr2;
+}
+
+void testSieveAlgorithms(int N)
+{
+    vector<bool> arr(N,true);
+    arr[0] = arr[1] = false ;
+    for(int i = 2; i< N; ++i)
+    {
+        if(arr[i] == true)  // 3
+        {
+            for(int j = i*2 ; j < N ; j*=2)  // 6 12 24
+            {
+                if(arr[j] == true && j % i == 0)
+                {
+                    arr[j] = false ; // every multiply of 2 of i put it false
+                }
+            }
+        }
+    }
+    vector<bool> arr2(N,true);
+    arr2 = sieveAlgorithmSqrt(N);
+    for(int i = 2 ; i < N; ++i)
+    {
+        if(arr[i] != arr2[i])
+        {
+            cout <<"the error in the position : "<< i <<endl;
+            cout << "arr" << "="<<arr[i]<<" and arr2 = "<<arr2[i]<<endl;
+        }
+        assert(arr[i] == arr2[i]);
+
+    }
+    cout <<"Perfect sievealgorithm work fine"<<endl;
+
+}
+
+void printCycles(int arr[],int size) // 2,0,1,4,3,5
+{
+    int start = 0 ;
+    for(int i = 0 ; i < size; i++)
+    {
+        //start of cicle
+
+        if(arr[i] != i || i == size - 1)
+        {
+            cout << i<<" -> " <<arr[i];
+            if(arr[i] == start)
+            {
+                cout << " // end of cycle ";
+                start = i + 1  ;
+            }
+            cout <<endl;
+
+        }
+
+
+    }
+}
+/*
+void printCycles(int arr[], int size)
+{
+    vector<bool> visited(size, false); // To keep track of visited elements
+
+    for (int i = 0; i < size; ++i)
+    {
+        if (!visited[i])
+        {
+            int start = i;
+            int current = i;
+
+            cout << "Cycle: ";
+            while (!visited[current])
+            {
+                cout << current << " -> ";
+                visited[current] = true;
+                current = arr[current];
+            }
+            cout << current << " // end of cycle" << endl;
+        }
+    }
+}*/
+/*
+int solveJoseph(int n, int k)
+{
+    //Check if k < n
+    assert(k < n);
+    vector<int> arr(n,0);//Initialize the array
+    for(int i = 0 ; i<n; ++i)
+    {
+        arr[i] = i + 1 ;
+    }
+    int start = 1 ;
+    int i = n ;
+
+    for(int j = 0; j<n; ++j)
+    {
+        int kill = start + (k-1); // 3
+        while(arr[++kill-1] == 0)
+        {
+            if(i == 2 ){
+                kill = 1 ;
+                break;
+            }
+            if(kill > n)
+            {
+                kill = n - (k-1) ;
+                break;
+            }
+        }
+        if(start >= n)
+        {
+            kill = n - i ;
+        }
+        start = kill + 1 ;
+        while(arr[++start-1] == 0)
+        {
+            if(start > n){
+                start = 1;
+                break;
+            }
+        }
+        arr[kill - 1] = 0 ;
+        i--;//Number of people still alive
+    }
+    for(int i = 0 ; i< n; ++i)
+    {
+        cout << arr[i] << " " ;
+    }
+    return 0 ;
+}
+*/
+int solveJoseph(int n, int k)
+{
+    // Check if k < n
+    assert(k < n);
+
+    vector<int> arr(n);  // Initialize the array
+    for (int i = 0; i < n; ++i)
+    {
+        arr[i] = i + 1;
+    }
+
+    int index = 0; // Start from the first person
+
+    for (int remaining = n; remaining > 1; --remaining)
+    {
+        index = (index + k - 1) % remaining; // Calculate the index of the next person to kill
+        arr.erase(arr.begin() + index); // Remove the person from the circle
+    }
+
+    cout << "The last person standing is " << arr[0] << endl;
+    return arr[0];
+}
 int main()
 {
     const char *test1 = "12345";
@@ -369,6 +560,11 @@ int main()
     // cout <<nonsortedSearchNum(testArraySorted,100,78)<<endl; // 0.0507ms
     cout << sumINarray(testArraySorted,100,42)<<endl; // 20 + 22
     cout << sumINarrayGpt(testArraySorted,100,42)<<endl; // 20 + 22 O(n)
-    bigFactorial(60); // 24
+    bigFactorial(50);
+    //sieveAlgorithmSqrt(25);
+    testSieveAlgorithms(10000);
+    int cycle[] = {2,0,1,4,3,5};
+    printCycles(cycle,6);
+    solveJoseph(7,3);
     return 0;
 }
