@@ -3,8 +3,9 @@
 #include <vector>
 #include <cmath>
 #include <cstdlib>  // For srand() and rand()
-#include <ctime>
-#include <string> // For time()
+#include <ctime>// For time()
+#include <string>
+#include <algorithm>
 using namespace std;
 
 const int rows = 2;
@@ -136,6 +137,122 @@ bool magic_square(const vector<vector<int>>& square)
     if(standr != sumWithDir(0,rows - 1,DOWN_LEFT,rows,square)) return false;
     return true;
 }
+// Function to check if the cell is within boundaries and not occupied
+bool checkBoundaries(const vector<vector<int>>& magic_square, int r, int c)
+{
+    int N = magic_square.size();
+    return (r >= 0 && r < N && c >= 0 && c < N && magic_square[r][c] == 0);
+}
+vector<vector<int>> magicSquareGenerator(int N, int D, int A)
+{
+    vector<vector<int>> magic_square(N, vector<int>(N, 0));
+
+    if (N % 2 != 0)   // If N is odd
+    {
+        // Start from the middle of the first row
+        int r = 0, c = N / 2;
+        magic_square[0][c] = A;
+        int t1 = r, t2 = c;
+
+        for (int i = 2; i <= N * N; ++i)
+        {
+            t1 += dir_r[UP_RIGHT];
+            t2 += dir_c[UP_RIGHT];
+
+            // Handle wrapping around the grid
+            if (t1 < 0) t1 = N - 1;
+            if (t2 == N) t2 = 0;
+
+            if (!checkBoundaries(magic_square, t1, t2))   // Go down
+            {
+                r += dir_r[DOWN];
+                c += dir_c[DOWN];
+                t1 = r;
+                t2 = c;
+            }
+
+            r = t1;
+            c = t2;
+            A = A +D;
+            magic_square[r][c] = A;
+
+        }
+    }
+    else if(N%2 == 0)    // Doubly even order n = 4k
+    {
+        //Fill the array sequentially from 1 to n^2
+        int r = 0,c = 0, i =1;
+
+        for(int i = 1 ; i <= N*N ; ++i)
+        {
+            magic_square[r][c] = i;
+            r += dir_r[RIGHT];
+            c += dir_c[RIGHT];
+            if(c > N - 1)
+            {
+                c =0;
+                ++r;
+            }
+        }
+        //Swap elements
+
+
+    }
+
+    return magic_square;
+}
+
+// Function for calculating Magic square
+void doublyEven( int n )
+{
+    int arr[n][n], i, j;
+
+    // filling matrix with its count value
+    // starting from 1;
+    for ( i = 0; i < n; i++)
+        for ( j = 0; j < n; j++)
+            arr[i][j] = (n*i) + j + 1;
+
+    // change value of Array elements
+    // at fix location as per rule
+    // (n*n+1)-arr[i][j]
+    // Top Left corner of Matrix
+    // (order (n/4)*(n/4))
+    for ( i = 0; i < n/4; i++)
+        for ( j = 0; j < n/4; j++)
+            arr[i][j] = (n*n + 1) - arr[i][j];
+
+    // Top Right corner of Matrix
+    // (order (n/4)*(n/4))
+    for ( i = 0; i < n/4; i++)
+        for ( j = 3 * (n/4); j < n; j++)
+            arr[i][j] = (n*n + 1) - arr[i][j];
+
+    // Bottom Left corner of Matrix
+    // (order (n/4)*(n/4))
+    for ( i = 3 * n/4; i < n; i++)
+        for ( j = 0; j < n/4; j++)
+            arr[i][j] = (n*n+1) - arr[i][j];
+
+    // Bottom Right corner of Matrix
+    // (order (n/4)*(n/4))
+    for ( i = 3 * n/4; i < n; i++)
+        for ( j = 3 * n/4; j < n; j++)
+            arr[i][j] = (n*n + 1) - arr[i][j];
+
+    // Centre of Matrix (order (n/2)*(n/2))
+    for ( i = n/4; i < 3 * n/4; i++)
+        for ( j = n/4; j < 3 * n/4; j++)
+            arr[i][j] = (n*n + 1) - arr[i][j];
+
+    // Printing the magic-square
+    for (i = 0; i < n; i++)
+    {
+        for ( j = 0; j < n; j++)
+            cout << arr[i][j] << " ";
+        cout << "\n";
+    }
+}
 
 void spiralMatrixOrder(const vector<vector<int>>& square)
 {
@@ -217,7 +334,7 @@ void printGame(char matrix[3][3])
 bool validateTheGame(char matrix[3][3],char standard)
 {
     bool passed = true ;
-    int c = 0 , r = 0 ;
+    int c = 0, r = 0 ;
     //Test all rows
     for(int t = 0 ; t < 3; ++t)
     {
@@ -323,7 +440,7 @@ void gameInFunction()
 {
     bool alive = true;
     char c1 = '.',c2 = '.';
-    string name1 , name2  ;
+    string name1, name2  ;
     cout<<"This is a X-O Game "<<endl ;
     cout <<"Player number 1 entire your name \n";
     getline(cin,name1);
@@ -379,7 +496,8 @@ void gameInFunction()
 
     while(alive)
     {
-        if(i == 9){
+        if(i == 9)  //End of game in this point
+        {
             alive = false ;
             cout << "There is a draw !"<<endl;
             break;
@@ -431,12 +549,16 @@ void gameInFunction()
         }
         printGame(matrix);
         i++;
-        if(i > 2){
-            if(validateTheGame(matrix,c2)){
+        if(i > 2)
+        {
+            if(validateTheGame(matrix,c2))
+            {
                 alive = false;
                 cout << "End of the game"<<endl;
                 cout << "The winner is the player 2"<<endl;
-            }if(validateTheGame(matrix,c1)){
+            }
+            if(validateTheGame(matrix,c1))
+            {
                 alive = false;
                 cout << "End of the game"<<endl;
                 cout << "The winner is the player 1"<<endl;
@@ -527,6 +649,68 @@ int main()
         {11, 18, 25,  2,  9}
     };
     spiral(arr7);
-    gameInFunction();
+    // gameInFunction();
+    const int size = 11;
+    vector<vector<int>> magic_square5(size, vector<int>(size, 0));
+
+    magic_square5 = magicSquareGenerator(size, 1, 1); // 1/2(n*(2*a+d*(n^2+1)))
+
+    for(int r = 0; r < size; ++r)
+    {
+        for(int c = 0; c < size; ++c)
+        {
+            cout << magic_square5[r][c] << " ";
+        }
+        cout << endl;
+    }
+    if(magic_square(magic_square5))
+    {
+        cout<<"This square is a magic !"<<endl;
+    }
+    else
+    {
+        cout << "This is not a magic square"<<endl;
+    }
+    // for even magic square
+    const int size1 = 8 ;
+    vector<vector<int>> magic_square4(size1, vector<int>(size1, 0));
+    magic_square4 = magicSquareGenerator(size1,1,1);
+
+    for(int r = 0; r < size1; ++r)
+    {
+        for(int c = 0; c < size1; ++c)
+        {
+            cout << magic_square4[r][c] << " ";
+        }
+        cout << endl;
+    }
+    if(magic_square(magic_square4))
+    {
+        cout<<"This square is a magic !"<<endl;
+    }
+    else
+    {
+        cout << "This is not a magic square"<<endl;
+    }
+    doublyEven(8);
+    vector<vector<int>> magic_square8 =
+    {
+        {64, 63, 3, 4, 5, 6, 58, 57},
+        {56, 55, 11, 12, 13, 14, 50, 49},
+        {17, 18, 46, 45, 44, 43, 23, 24},
+        {25, 26, 38, 37, 36, 35, 31, 32},
+        {33, 34, 30, 29, 28, 27, 39, 40},
+        {41, 42, 22, 21, 20, 19, 47, 48},
+        {16, 15, 51, 52, 53, 54, 10, 9},
+        {8, 7, 59, 60, 61, 62, 2, 1}
+    };
+    if(magic_square(magic_square8))
+    {
+        cout<<"This square is a magic !"<<endl;
+    }
+    else
+    {
+        cout << "This is not a magic square"<<endl;
+    }
     return 0 ;
 }
