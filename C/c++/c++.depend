@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1725875023 source:c:\users\aneshamdaoui\c++\c\c++\main.cpp
+	<iostream>
+	<vector>
+	<map>
+	<tuple>
+	<memory>
+

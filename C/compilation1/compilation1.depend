@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1725908901 source:c:\users\aneshamdaoui\c++\c\compilation1\main.cpp
+	<iostream>
+	"fun1.h"
+	"fun2.h"
+
+1725908447 c:\users\aneshamdaoui\c++\c\compilation1\fun1.h
+
+1725908772 c:\users\aneshamdaoui\c++\c\compilation1\fun2.h
+

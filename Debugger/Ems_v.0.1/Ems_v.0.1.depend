@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1726393433 source:c:\users\aneshamdaoui\c++\debugger\ems_v.0.1\main.cpp
+	<iostream>
+	<iomanip>
+	<limits>
+	"resourse.h"
+
+1726498639 c:\users\aneshamdaoui\c++\debugger\ems_v.0.1\resourse.h
+	"doctorsDataCenterfile.h"
+	"StudentDataCenter.h"
+	<string>
+	<vector>
+	<algorithm>
+
+1726416262 c:\users\aneshamdaoui\c++\debugger\ems_v.0.1\doctorsdatacenterfile.h
+	<vector>
+
+1726416265 c:\users\aneshamdaoui\c++\debugger\ems_v.0.1\studentdatacenter.h
+	<vector>
+
