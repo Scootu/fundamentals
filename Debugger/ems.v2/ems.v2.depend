@@ -1,0 +1,58 @@
+# depslib dependency file v1.0
+1727809851 source:c:\users\aneshamdaoui\c++\debugger\ems.v2\main.cpp
+	<iostream>
+	"courses-manager.h"
+	"doctors-manager.h"
+	"students-manager.h"
+	"user-flow-controller.h"
+
+1727807077 c:\users\aneshamdaoui\c++\debugger\ems.v2\courses-manager.h
+	<string>
+	<vector>
+	<memory>
+	"course.h"
+
+1727805929 c:\users\aneshamdaoui\c++\debugger\ems.v2\course.h
+	<string>
+	<vector>
+	<memory>
+
+1727848404 c:\users\aneshamdaoui\c++\debugger\ems.v2\doctors-manager.h
+	<string>
+	<vector>
+	<memory>
+	"doctor.h"
+
+1727805935 c:\users\aneshamdaoui\c++\debugger\ems.v2\doctor.h
+
+1727805955 c:\users\aneshamdaoui\c++\debugger\ems.v2\students-manager.h
+	<string>
+	<memory>
+	<vector>
+	"student.h"
+
+1727848115 c:\users\aneshamdaoui\c++\debugger\ems.v2\student.h
+	<string>
+	<vector>
+	<memory>
+	<tuple>
+	<map>
+	"course.h"
+	"assignment-solution.h"
+	"assignment.h"
+
+1727805949 c:\users\aneshamdaoui\c++\debugger\ems.v2\assignment-solution.h
+	<string>
+	<memory>
+	<vector>
+
+1727805942 c:\users\aneshamdaoui\c++\debugger\ems.v2\assignment.h
+	<string>
+	<vector>
+	<memory>
+
+1727805962 c:\users\aneshamdaoui\c++\debugger\ems.v2\user-flow-controller.h
+	<string>
+	<memory>
+	<vector>
+

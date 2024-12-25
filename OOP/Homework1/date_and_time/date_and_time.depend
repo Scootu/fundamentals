@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1729632057 source:c:\users\aneshamdaoui\c++\oop\homeworks\date_and_time\main.cpp
+	<iostream>
+	"date.h"
+
+1729631771 c:\users\aneshamdaoui\c++\oop\homeworks\date_and_time\date.h
+	<string>
+

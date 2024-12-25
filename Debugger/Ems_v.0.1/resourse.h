@@ -2,6 +2,8 @@
 #define RESOURSE_H_INCLUDED
 #include "doctorsDataCenterfile.h"
 #include "StudentDataCenter.h"
+#include <fstream>
+
 #include <string>  // Include this to recognize std::string
 #include <vector>
 #include <algorithm>
