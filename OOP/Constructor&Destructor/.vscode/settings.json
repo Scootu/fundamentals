@@ -2,6 +2,8 @@
     "files.associations": {
         "*.css": "tailwindcss",
         "stdexcept": "cpp",
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "limits": "cpp",
+        "utility": "cpp"
     }
 }
