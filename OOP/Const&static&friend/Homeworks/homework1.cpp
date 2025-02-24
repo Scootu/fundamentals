@@ -40,3 +40,12 @@ int main()
     B::getA().print(b); // Correct way to access static A and call print()
     return 0;
 }
+
+/*
+In both cases as it doesn't make sense. A static object is shared among all objects and doesn't have its own data members
+	So this invalidate the use of this pointer
+	Also using const means no changes for member data, but changes to what?!
+
+It is useful to think about the language features:
+	why does it allow something? why not?
+*/
