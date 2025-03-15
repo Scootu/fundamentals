@@ -60,8 +60,7 @@ public:
 		return aws_service_url;
 	}
 	~ConfigurationManger() {
-		// Note, you shouldn't try to destroy the conf_mgr here!!!
-		// The first object destroy it but others still use it (or will reload)!
+		
 
 		//FreeInstance();	// if you uncommented = infinite loop. WHY? Answer is belo very bottom
 		
@@ -77,7 +76,7 @@ public:
 	}
 };
 
-ConfigurationManger* ConfigurationManger::conf_mgr = nullptr;
+ConfigurationManger* ConfigurationManger::conf_mgr = nullptr; // initialization 
 
 void f1() {
 	ConfigurationManger* mgr = ConfigurationManger::GetInstance("/home/moustafa/conf_info.txt");
@@ -88,13 +87,14 @@ void f2() {
 	ConfigurationManger* mgr = ConfigurationManger::GetInstance("/home/moustafa/conf_info.txt");
 	cout << mgr->GetAwsServiceUrl() << "\n";
 }
-
+void f3() {
+	ConfigurationManger* mgr = ConfigurationManger::GetInstance("/home/moustafa/conf_info.txt");
+	cout << mgr->GetAwsServiceUrl() << "\n";
+}
 int main() {
 	f1();
 	f2();
-
-	// If we forgot to free, it will be memory leak!
-	// We need more elegant solutions!
+    f3();
 	ConfigurationManger::FreeInstance();
 	return 0;
 }
