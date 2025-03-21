@@ -118,11 +118,14 @@ int StudentGradesInfo::statistics_total_prints = 0;
 class StudentGradesInfoBlackBoxtexter
 {
 public:
-    StudentGradesInfo st; // how a can initialize this ?
-    
-    StudentGradesInfoBlackBoxtexter(){
+	StudentGradesInfo st;
 
+	// Constructor initializes `st` with a student ID
+	StudentGradesInfoBlackBoxtexter(const string &student_id) : st(student_id)
+	{
 	}
+
+private:
 	void testStudentId()
 	{
 		string id = st.GetStudentId();
@@ -161,10 +164,84 @@ public:
 			assert(false && "Error: Invalid ID format!");
 			return;
 		}
+		printf("Test id successed!\n");
+	}
+	void testAddGrade()
+	{
+		bool added = st.AddGrade(85.0, "Math");
+		assert(added && "Failed to add a new course!");
+
+		// Adding a duplicate course should fail
+		bool duplicate = st.AddGrade(90.0, "Math");
+		assert(!duplicate && "Duplicate course added!");
+
+		printf("testAddGrade passed!\n");
+	}
+	void testGetCourseGradeInfo()
+	{
+		pair<string, double> result;
+		bool found = st.GetCourseGradeInfo(0, result);
+		assert(found && "Valid course not found!");
+		assert(result.first == "Math" && result.second == 85.0 && "Incorrect course info!");
+
+		// Test out-of-bounds cases
+		bool notFound = st.GetCourseGradeInfo(100, result);
+		assert(!notFound && "Invalid index should return false!");
+
+		printf("testGetCourseGradeInfo passed!\n");
+	}
+	void testTotalCoursesCount()
+	{
+		int count = st.GetTotalCoursesCount();
+		assert(count == 1 && "Incorrect course count!");
+
+		printf("testTotalCoursesCount passed!\n");
+	}
+	void testTotalGradesSum()
+	{
+		pair<double, double> sum = st.GetTotalGradesSum();
+		assert(sum.first == 85.0 && "Incorrect sum of grades!");
+
+		printf("testTotalGradesSum passed!\n");
+	}
+	void Test_PrintAllCourses() {
+		cout << __func__ << "\n";
+	
+		// Redirect stdout to a file
+		freopen("test_output.txt", "w", stdout);
+	
+		StudentGradesInfo st1("S000123");
+		st1.AddGrade(95, "Math");
+		st1.AddGrade(88, "Physics");
+		st1.PrintAllCourses();
+	
+		// Restore stdout
+		freopen("/dev/tty", "w", stdout);
+	
+		// Read file content
+		ifstream infile("test_output.txt");
+		stringstream buffer;
+		buffer << infile.rdbuf();
+		string output = buffer.str();
+	
+		// Expected output
+		string expected = "Grades for student: S000123\n\tMath = 95\n\tPhysics = 88\n";
+	
+		// Compare results
+		assert(output == expected);
+	
+		cout << "Test_PrintAllCourses passed.\n";
 	}
 
-	void TestAll(){
+public:
+	void TestAll()
+	{
 		testStudentId();
+		testAddGrade();
+		testGetCourseGradeInfo();
+		testTotalCoursesCount();
+		testTotalGradesSum();
+		Test_PrintAllCourses();
 	}
 };
 
@@ -182,6 +259,8 @@ int main()
 	cout << p.first << "/" << p.second << "\n";
 
 	cout << "Bye\n";
-
+	// test
+	StudentGradesInfoBlackBoxtexter testS1(st1.GetStudentId());
+	testS1.TestAll();
 	return 0;
 }
