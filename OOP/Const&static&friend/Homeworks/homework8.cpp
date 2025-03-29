@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+class StudentGradesInfoWrapper;
+
 class StudentGradesInfo
 {
 private:
@@ -8,6 +10,8 @@ private:
     vector<double> grades;
     vector<string> courses_names;
     const int MAX_GRADE_PER_COURSE = 100.0;
+
+    friend class StudentGradesInfoWhiteBoxTester; // as a friend
 
     static int statistics_total_prints;
 
@@ -19,11 +23,13 @@ private:
             return MAX_GRADE_PER_COURSE;
         return grade;
     }
+    friend class StudentGradesInfoWrapper;  
 
 public:
     StudentGradesInfo(string student_id) : student_id(student_id)
-    { }
-   
+    {
+    }
+
     bool AddGrade(double grade, const string &course_name)
     {
         grade = AdjustGrade(grade);
@@ -76,66 +82,86 @@ public:
 
 int StudentGradesInfo::statistics_total_prints = 0;
 
-class StudentGradesInfoPrinter
+class StudentGradesInfoWrapper
 {
 private:
-    const StudentGradesInfo &st;
-    int course_counter; // Make it an instance variable
+    static int statistics_total_students;
+    static int statistics_total_AllPrints;
+    StudentGradesInfo st;
 
 public:
-    StudentGradesInfoPrinter(const StudentGradesInfo &st1) : st(st1), course_counter(0) {}
-
-    bool HasNext() const
+    StudentGradesInfoWrapper(string id) : st(id)
     {
-        return course_counter < st.GetTotalCoursesCount();
+        ++statistics_total_students;
     }
 
-    pair<string, double> GetNext()
+public:
+    bool
+    AddGrade(double grade, const string &course_name)
     {
-        pair<string, double> result;
-        if (HasNext())
-            st.GetCourseGradeInfo(course_counter++, result);
-        return result;
+        return st.AddGrade(grade, course_name);
     }
 
-    void ResetIterator()
+    void PrintAllCourses() const
     {
-        course_counter = 0;
+        st.PrintAllCourses();
+    }
+    bool GetCourseGradeInfo(int pos, pair<string, double> &result) const
+    {
+        return st.GetCourseGradeInfo(pos, result);
     }
 
-  
+    string GetStudentId() const
+    {
+        return st.GetStudentId();
+    }
+
+    int GetTotalCoursesCount() const
+    {
+        return st.GetTotalCoursesCount();
+    }
+
+    pair<double, double> GetTotalGradesSum() const
+    {
+        return st.GetTotalGradesSum();
+    }
+    static int GetTotalStudents()
+    {
+        return StudentGradesInfoWrapper::statistics_total_students;
+    }
+    static int getTotalPrints()
+    {
+        return StudentGradesInfo::statistics_total_prints;
+    }
+    static int GetTotalPrints()
+    {
+        StudentGradesInfoWrapper::statistics_total_AllPrints += getTotalPrints();
+        return StudentGradesInfoWrapper::statistics_total_AllPrints;
+    }
 };
-
-
-
+int StudentGradesInfoWrapper::statistics_total_students = 0;
+int StudentGradesInfoWrapper::statistics_total_AllPrints = 0;
 int main()
 {
-    StudentGradesInfo st1("S000123");
-    StudentGradesInfoPrinter printer(st1);
+    StudentGradesInfoWrapper st1("S000123");
+    st1.AddGrade(70, "Math");
+    st1.AddGrade(70, "programming 1");
+    st1.AddGrade(85, "programming 2");
 
-    st1.AddGrade(50, "Math");
-    st1.AddGrade(60, "programming 1");
-    int limit = 3;
-    cout << "Printing top " << limit << " Grades, if available\n";
-    while (limit-- && printer.HasNext())
-    {
-        pair<string, double> result = printer.GetNext();
+    st1.PrintAllCourses();
 
-        cout << "\t" << result.first << " = " << result.second << "\n";
-    }
+    pair<double, double> p = st1.GetTotalGradesSum();
+    cout << p.first << "/" << p.second << "\n";
 
-    st1.AddGrade(70, "Algorithms");
-    st1.AddGrade(67, "programming 2");
+    StudentGradesInfoWrapper st2("S000129");
+    st2.PrintAllCourses();
+    st2.PrintAllCourses();
+    st2.PrintAllCourses();
 
-    printer.ResetIterator();
-    limit = 3;
-    cout << "\nPrinting top " << limit << " Grades, if available\n";
-    while (limit-- && printer.HasNext())
-    {
-        pair<string, double> result = printer.GetNext();
+    cout << "Total Students " << StudentGradesInfoWrapper::GetTotalStudents() << "\n";
+    cout << "Total Prints " << StudentGradesInfoWrapper::GetTotalPrints() << "\n";
 
-        cout << "\t" << result.first << " = " << result.second << "\n";
-    }
+    cout << "Bye\n";
 
     return 0;
 }
