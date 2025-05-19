@@ -1,6 +1,6 @@
 // NOT well tested :)
-
-#include <bits/stdc++.h>
+// This is a simple system to ask questions and answer them.
+// It is not a real system. It is just a simple example to show how to use classes and objects.
 #include "Question.h"
 #include "Helper.cpp"
 #include <iostream>
@@ -11,8 +11,9 @@
 using namespace std;
 
 
-
-struct User {
+struct User { 
+	// Map the user name to user object. Let's keep one place ONLY with the object
+	private:
 	int user_id;		// internal system ID
 	string user_name;
 	string password;
@@ -23,7 +24,7 @@ struct User {
 	vector<int> questions_id_from_me;
 	// From question id to list of questions IDS on this question (thread questions) - For this user
 	map<int, vector<int>> questionid_questionidsThead_to_map;
-
+    public:
 	User() {
 		user_id = allow_anonymous_questions = -1;
 	}
@@ -39,17 +40,70 @@ struct User {
 		email = substrs[4];
 		allow_anonymous_questions = ToInt(substrs[5]);
 	}
+	int GetUserId() const {
+		return user_id;
+	}
+	int GetAllowAnonymousQuestions() const {
+		return allow_anonymous_questions;
+	}
+	int GetQuestionsIdFromMe() const {
+		return questions_id_from_me.size();
+	}
+	int GetQuestionIdFromMe(int index) const {
+		assert(index >= 0 && index < (int) questions_id_from_me.size());
+		return questions_id_from_me[index];
+	}
+	int GetQuestionIdThread(int question_id, int index) const {
+		assert(questionid_questionidsThead_to_map.count(question_id));
+		assert(index >= 0 && index < (int) questionid_questionidsThead_to_map[question_id].size());
+		return questionid_questionidsThead_to_map[question_id][index];
+	}
+	int GetQuestionIdThreadSize(int question_id) const {
+		assert(questionid_questionidsThead_to_map.count(question_id));
+		return questionid_questionidsThead_to_map[question_id].size();
+	}
+	int GetQuestionIdThread(int question_id) const {
+		assert(questionid_questionidsThead_to_map.count(question_id));
+		assert(questionid_questionidsThead_to_map[question_id].size() > 0);
+		return questionid_questionidsThead_to_map[question_id][0];
+	}
+	int GetQuestionIdThread(int question_id, int index) {
+		assert(questionid_questionidsThead_to_map.count(question_id));
+		assert(index >= 0 && index < (int) questionid_questionidsThead_to_map[question_id].size());
 
-	string ToString() {
+		return questionid_questionidsThead_to_map[question_id][index];
+	}
+	void SetQuestionIdThread(int question_id, int index, int id) {
+		assert(questionid_questionidsThead_to_map.count(question_id));
+		assert(index >= 0 && index < (int) questionid_questionidsThead_to_map[question_id].size());
+		questionid_questionidsThead_to_map[question_id][index] = id;
+	}
+	void SetUserId(int id) {
+		user_id = id;
+	}
+	void SetAllowAnonymousQuestions(int id) {
+		allow_anonymous_questions = id;
+	}
+	void SetQuestionsIdFromMe(int id) {
+		questions_id_from_me.push_back(id);
+	}
+	void SetQuestionIdThread(int question_id, int id) {
+		assert(questionid_questionidsThead_to_map.count(question_id));
+		questionid_questionidsThead_to_map[question_id].push_back(id);
+	}
+	// @Override
+	// This is a simple system to ask questions and answer them.
+	string ToString() const {
 		ostringstream oss;
 		oss << user_id << "," << user_name << "," << password << "," << name << "," << email << "," << allow_anonymous_questions;
 
 		return oss.str();
 	}
 
-	void Print() {
+	void Print() const {
 		cout << "User " << user_id << ", " << user_name << " " << password << ", " << name << ", " << email << "\n";
 	}
+ 
 };
 
 struct QuestionsManager {
@@ -74,14 +128,14 @@ struct QuestionsManager {
 		vector<string> lines = ReadFileLines("18_questions.txt");
 		for (auto &line : lines) {
 			Question question(line);
-			last_id = max(last_id, question.question_id);
+			last_id = max(last_id, question.GetQuestionId());
+            
+			questionid_questionobject_map[question.GetQuestionId()] = question;
 
-			questionid_questionobject_map[question.question_id] = question;
-
-			if (question.parent_question_id == -1)
-				questionid_questionidsThead_to_map[question.question_id].push_back(question.question_id);
+			if (question.GetParentQuestionId() == -1)
+				questionid_questionidsThead_to_map[question.GetQuestionId()].push_back(question.GetQuestionId());
 			else
-				questionid_questionidsThead_to_map[question.parent_question_id].push_back(question.question_id);
+				questionid_questionidsThead_to_map[question.GetParentQuestionId()].push_back(question.GetQuestionId());
 		}
 	}
 
@@ -188,12 +242,12 @@ struct QuestionsManager {
 
 		question.PrintToQuestion();
 
-		if (question.answer_text != "")
+		if (question.GetAnswerText() != "")
 			cout << "\nWarning: Already answered. Answer will be updated\n";
 
 		cout << "Enter answer: ";	// if user entered comma, system fails :)
-		getline(cin, question.answer_text);	// read last enter
-		getline(cin, question.answer_text);
+		getline(cin, question.GetAnswerText());	// read last enter
+		getline(cin, question.GetAnswerText());
 	}
 
 	void DeleteQuestion(User &user) {
@@ -234,38 +288,42 @@ struct QuestionsManager {
 
 		if (!to_user_pair.second) {
 			cout << "Note: Anonymous questions are not allowed for this user\n";
-			question.is_anonymous_questions = 0;
+			question.SetIsAnonymousQuestions(0);
 		} else {
 			cout << "Is anonymous questions?: (0 or 1): ";
-			cin >> question.is_anonymous_questions;
+			int r;
+			cin >> r;
+			question.SetIsAnonymousQuestions(r);
 		}
 
-		question.parent_question_id = ReadQuestionIdThread(user);
-
-		cout << "Enter question text: ";	// if user entered comma, system fails :)
-		getline(cin, question.question_text);
-		getline(cin, question.question_text);
-
-		question.from_user_id = user.user_id;
-		question.to_user_id = to_user_pair.first;
+        question.SetParentQuestionId(ReadQuestionIdThread(user));
+		cout << "Enter question text: ";
+		string line ;	// if user entered comma, system fails :)
+		getline(cin, line);
+		question.SetQuestionText(line);	// read last enter
+		// getline(cin, question.question_text);	// read last enter
+		getline(cin, line);
+		question.SetQuestionText(line);
+		// cout << "Enter question text: ";
+		question.SetFromUserId(user.user_id);
+		question.SetToUserId(to_user_pair.first);
 
 		// What happens in 2 parallel sessions who asked question?
 		// They are given same id. This is wrong handling :)
-		question.question_id = ++last_id;
+        question.SetQuestionId(++last_id);
+		questionid_questionobject_map[question.GetQuestionId()] = question;
 
-		questionid_questionobject_map[question.question_id] = question;
-
-		if (question.parent_question_id == -1)
-			questionid_questionidsThead_to_map[question.question_id].push_back(question.question_id);
+		if (question.GetParentQuestionId() == -1)
+			questionid_questionidsThead_to_map[question.GetQuestionId()].push_back(question.GetQuestionId());
 		else
-			questionid_questionidsThead_to_map[question.parent_question_id].push_back(question.question_id);
+			questionid_questionidsThead_to_map[question.GetParentQuestionId()].push_back(question.GetQuestionId());
 	}
 
 	void ListFeed() {
 		for (auto &pair : questionid_questionobject_map) {
 			Question &question = pair.second;
 
-			if (question.answer_text == "")
+			if (question.GetAnswerText() == "")
 				continue;
 
 			question.PrintFeedQuestion();

@@ -46,7 +46,64 @@ public:
         question_text = substrs[5];
         answer_text = substrs[6];
     }
-
+    int GetQuestionId() const
+    {
+        return question_id;
+    }
+    int GetParentQuestionId() const
+    {
+        return parent_question_id;
+    }
+    int GetFromUserId() const
+    {
+        return from_user_id;
+    }
+    int GetToUserId() const
+    {
+        return to_user_id;
+    }
+    int GetIsAnonymousQuestions() const
+    {
+        return is_anonymous_questions;
+    }
+    string GetQuestionText() const
+    {
+        return question_text;
+    }
+    string GetAnswerText() const
+    {
+        return answer_text;
+    }
+    void SetQuestionId(int id)
+    {
+        question_id = id;
+    }
+    void SetParentQuestionId(int id)
+    {
+        parent_question_id = id;
+    }
+    void SetFromUserId(int id)
+    {
+        from_user_id = id;
+    }
+    void SetToUserId(int id)
+    {
+        to_user_id = id;
+    }
+    void SetIsAnonymousQuestions(int id)
+    {
+        is_anonymous_questions = id;
+    }
+    void SetQuestionText(string text)
+    {
+        question_text = text;
+    }
+    void SetAnswerText(string text)
+    {
+        answer_text = text;
+    }
+    // @Override
+    // This is a simple system to ask questions and answer them.
     string ToString();
     void PrintToQuestion() const;
     void PrintFromQuestion() const;
