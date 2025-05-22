@@ -104,7 +104,7 @@ public:
     }
     // @Override
     // This is a simple system to ask questions and answer them.
-    string ToString();
+    string ToString() const;
     void PrintToQuestion() const;
     void PrintFromQuestion() const;
     void PrintFeedQuestion() const;

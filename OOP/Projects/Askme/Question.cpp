@@ -2,7 +2,7 @@
 
 #include "Question.h"
 using namespace std;
-string Question::ToString() {
+string Question::ToString() const {
 		ostringstream oss;
 		oss << question_id << "," << parent_question_id << "," << from_user_id << "," << to_user_id << "," << is_anonymous_questions << "," << question_text << "," << answer_text;
 
