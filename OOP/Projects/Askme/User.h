@@ -7,7 +7,6 @@
 #include <vector>
 #include <map>
 #include <cassert>
-#include "Helper.cpp"
 
 using namespace std;
 
