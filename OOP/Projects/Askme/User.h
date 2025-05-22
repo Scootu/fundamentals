@@ -25,14 +25,52 @@ private:
     vector<int> questions_id_from_me;
     // From question id to list of questions IDS on this question (thread questions) - For this user
     map<int, vector<int>> questionid_questionidsThead_to_map;
-    
-    public:
+
+public:
     User() {}
-    User(const string &line){}
+    User(const string &line) {}
+    string GetUserName() const
+    {
+        return user_name;
+    }
+    string GetPassword() const
+    {
+        return password;
+    }
+    string GetName() const
+    {
+        return name;
+    }
+    string GetEmail() const
+    {
+        return email;
+    }
+    void setUserName(const string &username_)
+    {
+        user_name = username_;
+    }
+    void setName(const string &name_)
+    {
+        name = name_;
+    }
+    void setPassword(const string &password_)
+    {
+        password = password_;
+    }
+    void setEmail(const string &email_)
+    {
+        email = email_;
+    }
+
+    // Getters
     int GetUserId() const {}
     int GetAllowAnonymousQuestions() const {}
     int GetQuestionIdFromMe(int index) const {}
     int GetQuestionIdThread(int question_id, int index) const {}
+    vector<int> GetQuestionIdFromMe() const
+    {
+        return questions_id_from_me;
+    }
     map<int, vector<int>> GetQuestionIdThread() const
     {
         return questionid_questionidsThead_to_map;
@@ -44,6 +82,10 @@ private:
     void ClearQuestionsIdFromMe()
     {
         questions_id_from_me.clear();
+    }
+    int GetQuestionsIdFromMeSize() const
+    {
+        return questions_id_from_me.size();
     }
     int GetQuestionIdThreadtoidSize(int question_id) const
     {

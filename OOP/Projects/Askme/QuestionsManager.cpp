@@ -1,6 +1,7 @@
 
 #include "QuestionsManager.h"
 
+
 QuestionsManager::QuestionsManager()
 {
     last_id = 0;
@@ -109,7 +110,7 @@ int QuestionsManager::ReadQuestionIdAny(User &user) const
         cout << "\nERROR: No question with such ID. Try again\n\n";
         return ReadQuestionIdAny(user);
     }
-    Question &question = questionid_questionobject_map[question_id];
+   const Question &question = questionid_questionobject_map.at(question_id);
 
     if (question.GetToUserId() != user.GetUserId())
     {
