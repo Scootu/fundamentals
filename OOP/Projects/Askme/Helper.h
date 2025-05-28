@@ -1,15 +1,18 @@
-#include <vector>
+#ifndef HELPER_H
+#define HELPER_H
+
 #include <iostream>
-#include <fstream>
 #include <sstream>
 #include <string>
+#include <vector>
 #include <map>
 #include <utility>
-using namespace std;
 #include <cassert>
+#include <fstream>
+using namespace std;
 
 /////////////////////////////// Helper Methods ///////////////////////////////
-vector<string> ReadFileLines(string path) {
+inline vector<string> ReadFileLines(string path) {
 	vector<string> lines;
 
 	fstream file_handler(path.c_str());
@@ -30,7 +33,7 @@ vector<string> ReadFileLines(string path) {
 	return lines;
 }
 
-void WriteFileLines(string path, vector<string> lines, bool append = true) {
+inline void WriteFileLines(string path, vector<string> lines, bool append = true) {
 	auto status = ios::in | ios::out | ios::app;
 
 	if (!append)
@@ -48,7 +51,7 @@ void WriteFileLines(string path, vector<string> lines, bool append = true) {
 	file_handler.close();
 }
 
-vector<string> SplitString(string s, string delimiter = ",") {
+inline vector<string> SplitString(string s, string delimiter = ",") {
 	vector<string> strs;
 
 	int pos = 0;
@@ -62,7 +65,7 @@ vector<string> SplitString(string s, string delimiter = ",") {
 	return strs;
 }
 
-int ToInt(string str) {
+inline int ToInt(string str) {
 	istringstream iss(str);
 	int num;
 	iss >> num;
@@ -70,7 +73,7 @@ int ToInt(string str) {
 	return num;
 }
 
-int ReadInt(int low, int high) {
+inline int ReadInt(int low, int high) {
 	cout << "\nEnter number in range " << low << " - " << high << ": ";
 	int value;
 
@@ -83,7 +86,7 @@ int ReadInt(int low, int high) {
 	return ReadInt(low, high);
 }
 
-int ShowReadMenu(vector<string> choices) {
+inline int ShowReadMenu(vector<string> choices) {
 	cout << "\nMenu:\n";
 	for (int ch = 0; ch < (int) choices.size(); ++ch) {
 		cout << "\t" << ch + 1 << ": " << choices[ch] << "\n";
@@ -91,3 +94,4 @@ int ShowReadMenu(vector<string> choices) {
 	return ReadInt(1, choices.size());
 }
 //////////////////////////////////////////////////////////////
+#endif

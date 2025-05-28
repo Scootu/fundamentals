@@ -2,7 +2,7 @@
 #define ASKMESYSTEM_H
 
 #include "UsersManager.h"
-#include "QuestionsManager.h"
+
 
 struct AskMeSystem
 {

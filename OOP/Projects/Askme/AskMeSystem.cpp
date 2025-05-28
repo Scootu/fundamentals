@@ -1,6 +1,6 @@
 #include "AskMeSystem.h"
 
-void AskMeSystem::LoadDatabase(bool fill_user_questions = false)
+void AskMeSystem::LoadDatabase(bool fill_user_questions)
 {
     users_manager.LoadDatabase();
     questions_manager.LoadDatabase();

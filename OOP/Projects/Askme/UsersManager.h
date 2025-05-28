@@ -7,7 +7,6 @@
 #include <map>
 #include <utility>
 #include <cassert>
-#include "Helper.cpp"
 #include "User.h"
 #include "Question.h"
 #include "QuestionsManager.h"

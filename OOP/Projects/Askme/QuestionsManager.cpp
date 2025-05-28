@@ -58,7 +58,7 @@ void QuestionsManager::PrintUserToQuestions(User &user) const
 {
     cout << "\n";
 
-    if (user.GetQuestionIdThreadtoidSize(0) == 0)
+    if (user.GetQuestionIdThreadtoidSize() == 0)
         cout << "No Questions";
 
     for (auto &pair : user.GetQuestionIdThread()
@@ -68,7 +68,7 @@ void QuestionsManager::PrintUserToQuestions(User &user) const
         if (pair.second.size() == 0)
             cout << "No Questions\n";
 
-        for (int pos = 0; pos < user.GetQuestionIdThreadtoidSize(pair.first); ++pos)
+        for (int pos = 0; pos < user.GetQuestionIdThreadtoidSize(); ++pos)
         {
             int question_id = user.GetQuestionIdThread(pair.first, pos);
             const Question &question = questionid_questionobject_map.at(question_id);
@@ -86,10 +86,16 @@ void QuestionsManager::PrintUserFromQuestions(User &user) const
 
     for (auto &question_id : user.GetQuestionIdFromMe())
     { //  vector<Question>
-
+        
         // Get the question from the map. & means same in memory, DON'T COPY
-        const Question &question = questionid_questionobject_map.at(question_id);
-        question.PrintFromQuestion();
+        cout<<"Question_id from me :"<<question_id<<endl;
+        if(questionid_questionobject_map.count(question_id)){
+            const Question &question = questionid_questionobject_map.at(question_id); 
+            question.PrintFromQuestion();
+        }else {
+            cout <<"No Questions";
+        }
+       
     }
     cout << "\n";
 }

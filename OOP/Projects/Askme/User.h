@@ -7,8 +7,7 @@
 #include <vector>
 #include <map>
 #include <cassert>
-#include "Helper.cpp"
-
+#include "Helper.h"
 using namespace std;
 
 class User
@@ -27,8 +26,8 @@ private:
     map<int, vector<int>> questionid_questionidsThead_to_map;
 
 public:
-    User() {}
-    User(const string &line) {}
+    User() ;
+    User(const string &line) ;
     string GetUserName() const
     {
         return user_name;
@@ -63,10 +62,10 @@ public:
     }
 
     // Getters
-    int GetUserId() const {}
-    int GetAllowAnonymousQuestions() const {}
-    int GetQuestionIdFromMe(int index) const {}
-    int GetQuestionIdThread(int question_id, int index) const {}
+    int GetUserId() const ;
+    int GetAllowAnonymousQuestions() const ;
+    int GetQuestionIdFromMe(int index) const ;
+    int GetQuestionIdThread(int question_id, int index) const ;
     vector<int> GetQuestionIdFromMe() const
     {
         return questions_id_from_me;
@@ -87,21 +86,20 @@ public:
     {
         return questions_id_from_me.size();
     }
-    int GetQuestionIdThreadtoidSize(int question_id) const
+    int GetQuestionIdThreadtoidSize() const
     {
-        assert(questionid_questionidsThead_to_map.count(question_id));
-        return questionid_questionidsThead_to_map.at(question_id).size();
+        return questionid_questionidsThead_to_map.size();
     }
     // Setters
-    void SetQuestionIdThread(int question_id, int index, int id) {}
-    void SetUserId(int id) {}
-    void SetAllowAnonymousQuestions(int id) {}
-    void SetQuestionsIdFromMe(int id) {}
+    void SetQuestionIdThread(int question_id, int index, int id) ;
+    void SetUserId(int id) ;
+    void SetAllowAnonymousQuestions(int id) ;
+    void SetQuestionsIdFromMe(int id) ;
 
-    void SetQuestionIdThread(int question_id, int id) {}
+    void SetQuestionIdThread(int question_id, int id) ;
 
-    string ToString() const {}
-    void Print() const {}
+    string ToString() const ;
+    void Print() const ;
 };
 
 #endif // USER_H

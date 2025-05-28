@@ -1,11 +1,19 @@
 // NOT well tested :)
 // This is a simple system to ask questions and answer them.
 // It is not a real system. It is just a simple example to show how to use classes and objects.
-#include "AskMeSystem.h"
 
+#include <vector>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <map>
+#include <utility>
+#include <cassert>
+#include "AskMeSystem.h"
 using namespace std;
 
-	
+
 
 int main() {
 	AskMeSystem service;

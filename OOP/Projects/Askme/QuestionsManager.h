@@ -2,7 +2,7 @@
 #include "User.h"
 #include "Question.h"
 
-class QuestionsManager
+struct QuestionsManager
 {
 private:
 	// From question id to list of questions IDS on this question (thread questions) - All users
