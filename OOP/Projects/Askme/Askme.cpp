@@ -11,7 +11,6 @@
 #include <utility>
 using namespace std;
 #include <cassert>
-
 #include "AskMeSystem.h"
 using namespace std;
 

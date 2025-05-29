@@ -9,7 +9,7 @@
 #include <cassert>
 #include "User.h"
 #include "Question.h"
-#include "QuestionsManager.h"
+
 
 using namespace std;
 
