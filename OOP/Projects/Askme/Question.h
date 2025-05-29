@@ -33,7 +33,7 @@ public:
         is_anonymous_questions = 1;
     }
 
-    Question(string line)
+    Question(string &line)
     {
         vector<string> substrs = SplitString(line);
         // assert(substrs.size() == 7);
@@ -66,11 +66,11 @@ public:
     {
         return is_anonymous_questions;
     }
-    string GetQuestionText() const
+    const string& GetQuestionText() const
     {
         return question_text;
     }
-    string GetAnswerText() const
+    const string& GetAnswerText() const
     {
         return answer_text;
     }
@@ -94,11 +94,11 @@ public:
     {
         is_anonymous_questions = id;
     }
-    void SetQuestionText(string text)
+    void SetQuestionText(const string &text)
     {
         question_text = text;
     }
-    void SetAnswerText(string text)
+    void SetAnswerText(const string &text)
     {
         answer_text = text;
     }

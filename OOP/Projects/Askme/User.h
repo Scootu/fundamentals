@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 #include <cassert>
-
+#include "Helper.h"
 using namespace std;
 
 class User
@@ -66,11 +66,11 @@ public:
     int GetAllowAnonymousQuestions() const {}
     int GetQuestionIdFromMe(int index) const {}
     int GetQuestionIdThread(int question_id, int index) const {}
-    vector<int> GetQuestionIdFromMe() const
+    const vector<int>& GetQuestionIdFromMe() const
     {
         return questions_id_from_me;
     }
-    map<int, vector<int>> GetQuestionIdThread() const
+    const map<int, vector<int>>& GetQuestionIdThread() const
     {
         return questionid_questionidsThead_to_map;
     }
@@ -101,6 +101,7 @@ public:
 
     string ToString() const {}
     void Print() const {}
+    void ReadUser(const string &user_name,int id);
 };
 
 #endif // USER_H

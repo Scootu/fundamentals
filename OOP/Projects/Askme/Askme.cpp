@@ -17,7 +17,7 @@ using namespace std;
 
 int main() {
 	AskMeSystem service;
-	service.run();
+	service.Run();
 
 	return 0;
 }

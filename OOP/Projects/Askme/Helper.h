@@ -12,7 +12,7 @@
 using namespace std;
 
 /////////////////////////////// Helper Methods ///////////////////////////////
-vector<string> ReadFileLines(string path) {
+vector<string> ReadFileLines(const string &path) {
 	vector<string> lines;
 
 	fstream file_handler(path.c_str());
@@ -33,7 +33,7 @@ vector<string> ReadFileLines(string path) {
 	return lines;
 }
 
-void WriteFileLines(string path, vector<string> lines, bool append = true) {
+void WriteFileLines(const string &path,const vector<string> &lines, bool append = true) {
 	auto status = ios::in | ios::out | ios::app;
 
 	if (!append)
@@ -51,11 +51,12 @@ void WriteFileLines(string path, vector<string> lines, bool append = true) {
 	file_handler.close();
 }
 
-vector<string> SplitString(string s, string delimiter = ",") {
+vector<string> SplitString (const string &str,const string &delimiter = ",") {
+	string s = str;
 	vector<string> strs;
 
 	int pos = 0;
-	string substr;                                        
+	string substr;
 	while ((pos = (int) s.find(delimiter)) != -1) {
 		substr = s.substr(0, pos);
 		strs.push_back(substr);
@@ -65,7 +66,7 @@ vector<string> SplitString(string s, string delimiter = ",") {
 	return strs;
 }
 
-int ToInt(string str) {
+int ToInt(const string &str) {
 	istringstream iss(str);
 	int num;
 	iss >> num;
@@ -86,7 +87,7 @@ int ReadInt(int low, int high) {
 	return ReadInt(low, high);
 }
 
-int ShowReadMenu(vector<string> choices) {
+int ShowReadMenu(const vector<string> &choices) {
 	cout << "\nMenu:\n";
 	for (int ch = 0; ch < (int) choices.size(); ++ch) {
 		cout << "\t" << ch + 1 << ": " << choices[ch] << "\n";

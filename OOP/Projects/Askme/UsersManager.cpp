@@ -59,45 +59,31 @@ void UsersManager::DoLogin()
 
 void UsersManager::DoSignUp()
 {
-    string username,name,email,password;
-    int isanonymous ;
-    while (true)
-    {
-        cout << "Enter user name. (No spaces): ";
-        cin>> username;
-        current_user.setUserName(username);
-        if (userame_userobject_map.count(current_user.GetUserName()))
-            cout << "Already used. Try again\n";
-        else
-            break;
-    }
-    cout << "Enter password: ";
-    cin >> password;
-    current_user.setPassword(password);
-    cout << "Enter name: ";
-    cin >> name;
-    current_user.setName(name);
-    cout << "Enter email: ";
-    cin>> email;
-    current_user.setEmail(email);
-    cout << "Allow anonymous questions? (0 or 1): ";
-    cin >> isanonymous;
-    current_user.SetAllowAnonymousQuestions(isanonymous);
-    // What happens in 2 parallel sessions if they signed up?
-    // They are given same id. This is wrong handling :)
-    current_user.SetUserId(++last_id);
-    userame_userobject_map[current_user.GetUserName()] = current_user;
+   string user_name;
+		while (true) {
+			cout << "Enter user name. (No spaces): ";
+			cin >> user_name;
+
+			if (userame_userobject_map.count(user_name))
+				cout << "Already used. Try again\n";
+			else
+				break;
+		}
+		// Move logic to user class, which may keep extending data members in future
+
+		current_user.ReadUser(user_name, ++last_id);
+		userame_userobject_map[current_user.GetUserName()] = current_user;
 
     UpdateDatabase(current_user);
 }
 
-void UsersManager::ListUsersNamesIds()
+void UsersManager::ListUsersNamesIds() const
 {
     for (auto &pair : userame_userobject_map)
         cout << "ID: " << pair.second.GetUserId() << "\t\tName: " << pair.second.GetName() << "\n";
 }
 
-pair<int, int> UsersManager::ReadUserId()
+pair<int, int> UsersManager::ReadUserId() const
 {
     int user_id;
     cout << "Enter User id or -1 to cancel: ";
@@ -116,7 +102,7 @@ pair<int, int> UsersManager::ReadUserId()
     return ReadUserId();
 }
 
-void UsersManager::UpdateDatabase(User &user) const
+void UsersManager::UpdateDatabase(const User &user) const
 {
     string line = user.ToString();
     vector<string> lines(1, line);
