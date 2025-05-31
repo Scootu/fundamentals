@@ -1,7 +1,6 @@
 
 #include "QuestionsManager.h"
 
-
 QuestionsManager::QuestionsManager()
 {
     last_id = 0;
@@ -28,47 +27,20 @@ void QuestionsManager::LoadDatabase()
     }
 }
 
-void QuestionsManager::FillUserQuestions(User &user)
-{
-    user.ClearQuestionsIdFromMe();
-    user.ClearQuestionIdThread();
-
-    for (auto &pair : questionid_questionidsThead_to_map)
-    { // pair<int, vector<Question>>
-        for (auto &question_id : pair.second)
-        { //  vector<Question>
-
-            // Get the question from the map. & means same in memory, DON'T COPY
-            Question &question = questionid_questionobject_map[question_id];
-
-            if (question.GetFromUserId() == user.GetUserId())
-                user.SetQuestionsIdFromMe(question.GetToUserId());
-            if (question.GetToUserId() == user.GetUserId())
-            {
-                if (question.GetParentQuestionId() != -1)
-                user.SetQuestionIdThread(question.GetQuestionId(), question.GetFromUserId());
-                else
-                user.SetQuestionIdThread(question.GetParentQuestionId(), question.GetFromUserId());
-            }
-        }
-    }
-}
-
-void QuestionsManager::PrintUserToQuestions(User &user) const
+void QuestionsManager::PrintUserToQuestions(const User &user) const
 {
     cout << "\n";
 
-    if (user.GetQuestionIdThreadtoidSize() == 0)
+    if (user.GetQuestionIdThreadtoidSize(0) == 0)
         cout << "No Questions";
 
-    for (auto &pair : user.GetQuestionIdThread()
-    ) // pair<int, vector<Question>>
-    { // pair<int, vector<Question>>
+    for (auto &pair : user.GetQuestionIdThread()) // pair<int, vector<Question>>
+    {                                             // pair<int, vector<Question>>
         cout << "Thread Question Id (" << pair.first << ")\n";
         if (pair.second.size() == 0)
             cout << "No Questions\n";
 
-        for (int pos = 0; pos < user.GetQuestionIdThreadtoidSize(); ++pos)
+        for (int pos = 0; pos < user.GetQuestionIdThreadtoidSize(pair.first); ++pos)
         {
             int question_id = user.GetQuestionIdThread(pair.first, pos);
             const Question &question = questionid_questionobject_map.at(question_id);
@@ -78,7 +50,7 @@ void QuestionsManager::PrintUserToQuestions(User &user) const
     cout << "\n";
 }
 
-void QuestionsManager::PrintUserFromQuestions(User &user) const
+void QuestionsManager::PrintUserFromQuestions(const User &user) const
 {
     cout << "\n";
     if (user.GetQuestionsIdFromMeSize() == 0)
@@ -102,7 +74,7 @@ void QuestionsManager::PrintUserFromQuestions(User &user) const
 
 // Used in Answering a question for YOU.
 // It can be any of your questions (thread or not)
-int QuestionsManager::ReadQuestionIdAny(User &user) const
+int QuestionsManager::ReadQuestionIdAny(const User &user) const
 {
     int question_id;
     cout << "Enter Question id or -1 to cancel: ";
@@ -116,7 +88,7 @@ int QuestionsManager::ReadQuestionIdAny(User &user) const
         cout << "\nERROR: No question with such ID. Try again\n\n";
         return ReadQuestionIdAny(user);
     }
-   const Question &question = questionid_questionobject_map.at(question_id);
+    const Question &question = questionid_questionobject_map.at(question_id);
 
     if (question.GetToUserId() != user.GetUserId())
     {
@@ -127,7 +99,7 @@ int QuestionsManager::ReadQuestionIdAny(User &user) const
 }
 
 // Used to ask a question on a specific thread for whatever user
-int QuestionsManager::ReadQuestionIdThread(User &user) const
+int QuestionsManager::ReadQuestionIdThread(const User &user) const
 {
     int question_id;
     cout << "For thread question: Enter Question id or -1 for new question: ";
@@ -144,7 +116,7 @@ int QuestionsManager::ReadQuestionIdThread(User &user) const
     return question_id;
 }
 
-void QuestionsManager::AnswerQuestion(User &user)
+void QuestionsManager::AnswerQuestion(const User &user)
 {
     int question_id = ReadQuestionIdAny(user);
 
@@ -158,15 +130,14 @@ void QuestionsManager::AnswerQuestion(User &user)
     if (question.GetAnswerText() != "")
         cout << "\nWarning: Already answered. Answer will be updated\n";
 
-    cout << "Enter answer: ";               // if user entered comma, system fails :)
-    string line; // if user entered comma, system fails :)
+    cout << "Enter answer: "; // if user entered comma, system fails :)
+    string line;
     getline(cin, line);
-    question.SetAnswerText(line); // read last enter
-    // getline(cin, question.answer_text);	// read last enter
-
+    getline(cin, line);
+    question.SetAnswerText(line);
 }
 
-void QuestionsManager::DeleteQuestion(User &user)
+void QuestionsManager::DeleteQuestion(const User &user)
 {
     int question_id = ReadQuestionIdAny(user);
 
@@ -206,7 +177,7 @@ void QuestionsManager::DeleteQuestion(User &user)
     }
 }
 
-void QuestionsManager::AskQuestion(User &user, pair<int, int> to_user_pair)
+void QuestionsManager::AskQuestion(const User &user,const pair<int, int> &to_user_pair)
 {
     Question question;
 
@@ -246,11 +217,11 @@ void QuestionsManager::AskQuestion(User &user, pair<int, int> to_user_pair)
         questionid_questionidsThead_to_map[question.GetParentQuestionId()].push_back(question.GetQuestionId());
 }
 
-void QuestionsManager::ListFeed() 
+void QuestionsManager::ListFeed() const
 {
-    for (auto &pair : questionid_questionobject_map)
+    for (const auto &pair : questionid_questionobject_map)
     {
-        Question &question = pair.second;
+        const Question &question = pair.second;
 
         if (question.GetAnswerText() == "")
             continue;
@@ -263,7 +234,7 @@ void QuestionsManager::UpdateDatabase() const
 {
     vector<string> lines;
 
-    for (auto &pair : questionid_questionobject_map)
+    for (const auto &pair : questionid_questionobject_map)
         lines.push_back(pair.second.ToString());
 
     WriteFileLines("18_questions.txt", lines, false);

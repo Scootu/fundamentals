@@ -1,9 +1,4 @@
 211,-1,13,11,1,It was nice to chat to you,For my pleasure Dr Mostafa
 212,-1,13,45,0,Please search archive before asking,
 301,-1,11,13,0,Free to meet?,Yes i am free to meet with you 
-<<<<<<< HEAD
-302,-1,-1,46,0,How we can implement this features ?,
-303,211,-1,48,0,Where are you living now ?,
-=======
 302,-1,46,46,0,What is the day today ?,it's moday broh!
->>>>>>> 5c9d4ae2798303fd57eb1a8903f43f602f939582

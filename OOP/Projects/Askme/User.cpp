@@ -1,9 +1,6 @@
 #include "User.h"
 
-User::User()
-{
-    user_id = allow_anonymous_questions = -1;
-}
+User::User() : user_id(-1), allow_anonymous_questions(-1) {}
 
 User::User(const string &line)
 {
@@ -73,4 +70,42 @@ string User::ToString() const
 void User::Print() const
 {
     cout << "User " << user_id << ", " << user_name << " " << password << ", " << name << ", " << email << "\n";
+}
+void User::ReadUser(const string &user_name, int id)
+{
+    setUserName(user_name);
+    SetUserId(id);
+
+    string str;
+
+    cout << "Enter password: ";
+    cin >> str;
+    setPassword(str);
+
+    cout << "Enter name : ";
+    cin >> str;
+    setName(str);
+
+    cout << "Enter email: ";
+    cin >> str;
+    setEmail(str);
+
+    cout << "Allow anonymous questions? (0 or 1)";
+    int st;
+    cin >> st;
+    SetAllowAnonymousQuestions(st);
+}
+void User::ResetToQuestions(const vector<int> &to_questions)
+{
+    questions_id_from_me.clear();
+
+    for (const auto &question_id : to_questions)
+        questions_id_from_me.push_back(question_id);
+}
+void User::ResetFromQuestions(const vector<pair<int, int>> &to_questions)
+{
+    questionid_questionidsThead_to_map.clear();
+
+    for (const auto &id_pair : to_questions)
+        questionid_questionidsThead_to_map[id_pair.first].push_back(id_pair.second);
 }

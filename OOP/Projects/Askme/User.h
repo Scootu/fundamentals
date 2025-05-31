@@ -64,31 +64,26 @@ public:
     // Getters
     int GetUserId() const ;
     int GetAllowAnonymousQuestions() const ;
-    int GetQuestionIdFromMe(int index) const ;
-    int GetQuestionIdThread(int question_id, int index) const ;
-    vector<int> GetQuestionIdFromMe() const
+    const vector<int>& GetQuestionIdFromMe() const
     {
         return questions_id_from_me;
     }
-    map<int, vector<int>> GetQuestionIdThread() const
+    const map<int, vector<int>>& GetQuestionIdThread() const
     {
         return questionid_questionidsThead_to_map;
-    }
-    void ClearQuestionIdThread()
-    {
-        questionid_questionidsThead_to_map.clear();
-    }
-    void ClearQuestionsIdFromMe()
-    {
-        questions_id_from_me.clear();
     }
     int GetQuestionsIdFromMeSize() const
     {
         return questions_id_from_me.size();
     }
-    int GetQuestionIdThreadtoidSize() const
+    int GetQuestionIdThreadtoidSize(int question_id) const
     {
-        return questionid_questionidsThead_to_map.size();
+        if(questionid_questionidsThead_to_map.at(question_id).size()== 0){
+
+            return 0;
+        }
+        assert(questionid_questionidsThead_to_map.count(question_id));
+        return questionid_questionidsThead_to_map.at(question_id).size();
     }
     // Setters
     void SetQuestionIdThread(int question_id, int index, int id) ;
@@ -100,6 +95,9 @@ public:
 
     string ToString() const ;
     void Print() const ;
+    void ReadUser(const string &user_name,int id);
+    void ResetToQuestions(const vector<int> &to_questions);
+    void ResetFromQuestions(const vector<pair<int, int>> &to_questions);
 };
 
 #endif // USER_H

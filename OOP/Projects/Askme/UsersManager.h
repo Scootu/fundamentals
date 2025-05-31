@@ -9,7 +9,7 @@
 #include <cassert>
 #include "User.h"
 #include "Question.h"
-#include "QuestionsManager.h"
+
 
 using namespace std;
 
@@ -22,15 +22,25 @@ private:
 
 public:
     UsersManager();
-    User& GetcurrentUser(){
+    const User &GetcurrentUser() const
+    {
         return current_user;
     }
     void LoadDatabase();
     void AccessSystem();
     void DoLogin();
     void DoSignUp();
-    void ListUsersNamesIds();
-    pair<int, int> ReadUserId();
-    void UpdateDatabase(User &user) const;
+    void ResetToQuestions(const vector<int> &to_questions)
+    {
+        current_user.ResetToQuestions(to_questions);
+    }
+
+    void ResetFromQuestions(const vector<pair<int, int>> &to_questions)
+    {
+        current_user.ResetFromQuestions(to_questions);
+    }
+    void ListUsersNamesIds() const;
+    pair<int, int> ReadUserId() const;
+    void UpdateDatabase(const User &user) const;
 };
 #endif // USERSMANAGER_H

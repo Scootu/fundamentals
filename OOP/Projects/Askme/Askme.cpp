@@ -11,9 +11,12 @@
 #include <utility>
 #include <cassert>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 5c9d4ae2798303fd57eb1a8903f43f602f939582
+=======
+>>>>>>> 562d284e68ddcdd9378bf9958e6c20b4a8598a24
 #include "AskMeSystem.h"
 using namespace std;
 
@@ -21,7 +24,7 @@ using namespace std;
 
 int main() {
 	AskMeSystem service;
-	service.run();
+	service.Run();
 
 	return 0;
 }

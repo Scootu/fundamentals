@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-#include "AskMeSystem.h"
-class Teste{
-    
-};
-=======
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -192,4 +186,3 @@ int main() {
     tester.RunAllTests();
     return 0;
 }
->>>>>>> 5c9d4ae2798303fd57eb1a8903f43f602f939582
