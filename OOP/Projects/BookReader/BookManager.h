@@ -2,6 +2,7 @@
 #define BOOKMANAGER_H
 
 #include "Book.h"
+#include "Admin.h"
 #include "Helper.cpp"
 #include <map>
 #include <string>
@@ -29,7 +30,7 @@ public:
             booksid_to_BookObject_map[book.GetBookId()] = book;
         }
     }
-    const Book &addNewBook()
+    void AddNewBook(const Admin& admin)
     {
     }
     const vector<Book>& GetlistofBooks(const vector<int> &books_ids)
@@ -38,7 +39,10 @@ public:
         vector<Book> books;
         for (auto book_id& : books_ids)
         {
-            if(booksid_to_BookObject_map.find(book_id)!= -1)
+            if(!booksid_to_BookObject_map.count(book_id)){
+                cout << "Book id:"<<book_id<<" doen't exist! \n\n";
+                continue;
+            }
             books.push_back(booksid_to_BookObject_map[book_id]);
         }
         return books;

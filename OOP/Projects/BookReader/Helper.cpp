@@ -56,7 +56,9 @@ vector<int> SplitBooksids(const string &str)
     }
     return bookIds;
 }
-
+vector<string> SplitStringSessions(const string& str){
+    string s = str;
+}
 int ToInt(const string &str)
 {
     istringstream iss(str);

@@ -14,6 +14,7 @@ private:
     Admin current_Admin;
     int last_id;
     map<int, vector<Book>> adminId_booksObject_map;
+    map<string,Admin> adminName_AdminObject_map;
     
 public:
    AdminManager();
@@ -22,6 +23,6 @@ public:
    void DoLogin();
    void DoSignUp();
    //void ListUsersNamesIds();
-
+   void UpdateDatabase(const Admin& admin);
 };
 #endif

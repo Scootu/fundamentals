@@ -82,7 +82,7 @@ public:
     void Print() const;
     void ReadAdmin(const string &admin_name, int id)
     {
-        SetAdminName(admin_name);
+        SetName(admin_name);
         SetAdminId(id);
 
         string str;
@@ -91,9 +91,28 @@ public:
         cin >> str;
         SetPassword(str);
 
-        cout << "Enter name: ";
+        cout << "Enter your fullname: ";
         cin >> str;
-        SetName(str);
+        SetAdminName(str);
+    }
+    string ToString() const
+    {
+        ostringstream oss;
+        string str;
+
+        // Convert vector<int> to comma-separated string
+        for (size_t i = 0; i < books_ids_from_admin.size(); i++)
+        {
+            if (i != 0)
+            {
+                str += ",";
+            }
+            str += to_string(books_ids_from_admin[i]);
+        }
+
+        oss << admin_id << ", \"" << admin_name << "\"," << password << "," << name << "," << email << ",{" << str << "}";
+
+        return oss.str();
     }
 };
 

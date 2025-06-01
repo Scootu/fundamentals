@@ -15,34 +15,39 @@ class Book {
     string title;
     string author;
     int year;
+    int totalPageNumber;
     //vector<pair<string, string>> chapters; // chapter name + content
     
     public :
     Book():year(-1){}
     Book(const string& line){
         vector<string> str = SplitString(line);
-        assert(str.size() == 5);
+        assert(str.size() == 6);
         book_id = ToInt(str[0]);
         admin_id = ToInt(str[1]);
         title = str[2];
         author = str[3];
         year = str[4];
+        totalPageNumber = str[5];
     }
 
-    int GetBookId(){
+    int GetBookId() const {
         return book_id;
     }
-    string GetAdminId(){
+    string GetAdminId() const {
         return admin_id;
     }
-    string GetBookTitle(){
+    string GetBookTitle() const {
         return title;
     }
-    string GetAuthor(){
+    string GetAuthor() const {
         return author;
     }
-    int Getyear(){
+    int Getyear() const {
         return year;
+    }
+    int GetTotalPageNumber() const {
+        return totalPageNumber;
     }
     
 };

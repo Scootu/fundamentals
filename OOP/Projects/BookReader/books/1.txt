@@ -1,11 +1,11 @@
 [TITLE]The Great Book
 [AUTHOR]John Doe
 [YEAR]2023
-
+[PAGE 1]
 [CHAPTER 1]
 This is the beginning of chapter 1...
 More text for chapter 1...
-
+[PAGE 2]
 [CHAPTER 2]
 Chapter 2 content starts here...
 And continues...
