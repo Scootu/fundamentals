@@ -56,9 +56,14 @@ vector<int> SplitBooksids(const string &str)
     }
     return bookIds;
 }
-vector<string> SplitStringSessions(const string& str){
-    string s = str;
+
+string Trim(const string& str) {
+    size_t first = str.find_first_not_of(" \t");
+    if (string::npos == first) return "";
+    size_t last = str.find_last_not_of(" \t");
+    return str.substr(first, (last - first + 1));
 }
+
 int ToInt(const string &str)
 {
     istringstream iss(str);

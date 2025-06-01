@@ -1,2 +1,2 @@
 id,user_name,name,password,,email,session
-99,"Anes Hamdaoui",anes,123,hamdaoui@gmail.com,[{book_id,last_page_number,date_and_time_of_last_read},{....}]
+99,"Anes Hamdaoui",anes,123,hamdaoui@gmail.com,[{session_id,book_id,last_page_number,date_and_time_of_last_read},{....}]
