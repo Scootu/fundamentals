@@ -26,6 +26,8 @@ public:
         bookManagerSystem.AddNewBook(current_Admin);
    }
    void UpdateDatabase(const Admin& admin);
-   
+   void ResetBooksIdtoAdmin(const vector<int>& bookIds){ // to Update the books_ids_from_admin
+         current_Admin.ResetBooksIdsFromAdmin(bookIds);
+    }
 };
 #endif

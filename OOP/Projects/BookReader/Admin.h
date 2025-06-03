@@ -34,6 +34,14 @@ public:
         email = substrs[4];
         books_ids_from_admin = SplitBooksids(substrs[5]);
     }
+
+    void ResetBooksIdsFromAdmin(const vector<int>& books_from){
+         books_ids_from_admin.clear();
+
+         for(const auto& book_id:books_from){
+            books_ids_from_admin.push_back(book_id);
+         }
+    }
     // Gettters
     int GetAdminId() const
     {
@@ -55,7 +63,7 @@ public:
     {
         return password;
     }
-    vector<int> GetBooksIdsFromAdmin() const
+    const vector<int>& GetBooksIdsFromAdmin() const
     {
         return books_ids_from_admin;
     }

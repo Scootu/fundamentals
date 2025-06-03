@@ -108,7 +108,7 @@ int ReadInt(int low, int high)
     cout << "ERROR: invalid number...Try again\n";
     return ReadInt(low, high);
 }
-int showReadMenuAdmin(const vector<string> &choices)
+int showReadMenu(const vector<string> &choices)
 {
     cout << "\nMenu:\n";
     for (int ch = 0; ch < (int)choices.size(); ++ch)

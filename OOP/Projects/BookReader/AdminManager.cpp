@@ -7,7 +7,7 @@ AdminManager::AdminManager()
 }
 void AdminManager::AccessSystem()
 {
-   int choice = showReadMenuAdmin({"Login", "Sign up"});
+   int choice = showReadMenu({"Login", "Sign up"});
    if (choice == 1)
       DoLogin();
    else

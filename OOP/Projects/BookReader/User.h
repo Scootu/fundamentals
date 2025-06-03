@@ -28,19 +28,19 @@ public:
                                                                last_page_number(lpn),
                                                                time_now(time), last_id(0) {} // Initialize 'now' with current time
 
-    int GetSessionId() const
+    const int& GetSessionId() const
     {
         return session_id;
     }
-    int GetBookId() const
+    const int& GetBookId() const
     {
-        return BookId;
+        return book_id;
     }
-    int GetLpn() const
+    const int& GetLpn() const
     {
         return last_page_number;
     }
-    string GetTimeKnow() const
+    const string& GetTimeKnow() const
     {
         return time_now;
     }
@@ -65,7 +65,7 @@ public:
         time_now = time;
     }
 
-    void AddNewSession(int bookId, int lpn, int session_id_)
+    void AddNewSession(int bookId, int lpn) // need a bookObj ?
     {
         // Get current time
         auto now = chrono::system_clock::now();
@@ -79,11 +79,10 @@ public:
         string time_str = oss.str();
 
         // Create new session with formatted time
-        session s(session_id_, bookId, lpn, time_str);
+        session s(++last_id, bookId, lpn, time_str);
 
         // Store the session (assuming you want to add it to the map)
-        session_id_session_object_map[session_id_] = s;
-        last_id = session_id_ + 1; // Update last_id if needed
+        session_id_session_object_map[s.GetSessionId()] = s;
         // UpdateDatabase()
     }
     void Print() const
@@ -93,7 +92,7 @@ public:
              << ", Timestamp: " << time_now << "\n";
     }
 
-    void UploadHistoryOfSessions(const string &line)
+    void LoadHistroyOfSessions(const string &line)
     {
 
         // Extract content between [ ]
@@ -128,9 +127,9 @@ public:
             if (components.size() >= 4)
             {
                 // Create session object (assuming session_id is auto-generated elsewhere)
-                int session_id = stoi(components[0]);
-                int book_id = stoi(components[1]);
-                int last_page = stoi(components[2]);
+                int session_id = ToInt(components[0]);
+                int book_id = ToInt(components[1]);
+                int last_page = ToInt(components[2]);
                 string timestamp = components[3];
 
                 // sessions.emplace_back(session_id, book_id, last_page, timestamp);
@@ -139,6 +138,7 @@ public:
                 ses.SetBookId(book_id);
                 ses.SetLpn(last_page);
                 ses.SetTime(timestamp);
+                last_id = max(last_id,ses.GetSessionId());
                 session_id_session_object_map[ses.GetSessionId()] = ses;
             }
         }
@@ -216,7 +216,7 @@ public:
         // historyOfsessions = current_session.GetHistoryOfSessions(substr[5]);
         // initialize session
         current_session.session_id_session_object_map.clear();
-        current_session.UploadHistoryOfSessions(substr[5]);
+        current_session.LoadHistroyOfSessions(substr[5]);
     }
     int GetUserId() const
     {
@@ -237,11 +237,44 @@ public:
     {
         return email;
     }
-    session GetCurrentSession() const
+    const session& GetCurrentSession() const
     {
         return current_session;
     }
-    
+    void SetUserName(const string& user_name_){
+        user_name = user_name_;
+    }
+    void SetUserId(const int& id_){
+        user_id = id;
+    }
+    void SetFullName(const string& name){
+        full_name = name;
+    }
+    void SetPassword(const string& pass){
+        password = pass;
+    }
+    void SetEmail(const string& e){
+        email = e;
+    }
+    void ReadUser(const string &user_name, int id) {
+		SetUserName(user_name);
+		SetUserId(id);
+
+		string str;
+
+		cout << "Enter password: ";
+		cin >> str;
+		SetPassword(str);
+
+		cout << "Enter name: ";
+		cin >> str;
+		SetFullName(str);
+
+		cout << "Enter email: ";
+		cin >> str;
+		SetEmail(str);
+	}
+
     void Print() const
     {
         cout << "User " << user_id << ", " << user_name << "," << password << ", " << full_name << ", " << email << "\n";
