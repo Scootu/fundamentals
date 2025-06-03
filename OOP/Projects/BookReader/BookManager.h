@@ -32,10 +32,19 @@ public:
     }
     void AddNewBook(const Admin& admin)
     {
+         //I need the book object to add to a list of map<int, vector<Book>> adminId_booksObject_map; 
+         // do i need that or i just need to update the books_ids_from_admin ?
     }
-    const vector<Book>& GetlistofBooks(const vector<int> &books_ids)
+
+    void PrintListOfbookSystem(){
+        for(auto& pair: booksid_to_BookObject_map){
+            pair.second.Print();
+        }
+    }
+    const vector<Book>& GetlistofBooks(const Admin& admin) // This is for an admin
     {
         LoadDataBase();
+        const vector<int> &books_ids = admin.GetBooksIdsFromAdmin();
         vector<Book> books;
         for (auto book_id& : books_ids)
         {
@@ -45,7 +54,9 @@ public:
             }
             books.push_back(booksid_to_BookObject_map[book_id]);
         }
+       
         return books;
     }
+    void ResetBooksIdtoAdmin();// to Update the books_ids_from_admin
 }
 #endif

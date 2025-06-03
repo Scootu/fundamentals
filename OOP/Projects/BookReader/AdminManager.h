@@ -13,8 +13,8 @@ private:
     // map<Admin,vector<User>> Adminobject_usersObject_map;
     Admin current_Admin;
     int last_id;
-    map<int, vector<Book>> adminId_booksObject_map;
     map<string,Admin> adminName_AdminObject_map;
+    BookManager bookManagerSystem;
     
 public:
    AdminManager();
@@ -22,7 +22,10 @@ public:
    void AccessSystem();
    void DoLogin();
    void DoSignUp();
-   //void ListUsersNamesIds();
+   void AddNewBook(){
+        bookManagerSystem.AddNewBook(current_Admin);
+   }
    void UpdateDatabase(const Admin& admin);
+   
 };
 #endif

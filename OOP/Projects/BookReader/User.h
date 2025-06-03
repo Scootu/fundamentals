@@ -28,23 +28,23 @@ public:
                                                                last_page_number(lpn),
                                                                time_now(time), last_id(0) {} // Initialize 'now' with current time
 
-    int GetSessionId()
+    int GetSessionId() const
     {
         return session_id;
     }
-    int GetBookId()
+    int GetBookId() const
     {
         return BookId;
     }
-    int GetLpn()
+    int GetLpn() const
     {
         return last_page_number;
     }
-    string GetTimeKnow()
+    string GetTimeKnow() const
     {
         return time_now;
     }
-    map<int, session> GetSessionIdFromSessionObj()
+    const map<int, session> &GetSessionIdFromSessionObj() const
     {
         return session_id_session_object_map;
     }
@@ -84,6 +84,7 @@ public:
         // Store the session (assuming you want to add it to the map)
         session_id_session_object_map[session_id_] = s;
         last_id = session_id_ + 1; // Update last_id if needed
+        // UpdateDatabase()
     }
     void Print() const
     {
@@ -151,18 +152,44 @@ public:
 
         return oss.str();
     }
-    void PrintHistoryOfSessions(){
-         cout <<"\n";
+    void PrintLatestSessions()
+    {
+        const int max_sessions_to_print = 5; // Print latest 5 sessions
+        cout << "\n";
 
-         if(session_id_session_object_map.size() == 0){
-            cout <<"No sessions";
-         }
+        if (session_id_session_object_map.empty())
+        {
+            cout << "No sessions\n";
+            return;
+        }
 
-         for(const auto &pair:session_id_session_object_map){
-            const session& ses = pair.second;
+        // Start from the end and move backwards
+        auto it = session_id_session_object_map.rbegin(); // Reverse iterator
+        int count = 0;
+
+        while (it != session_id_session_object_map.rend() && count < max_sessions_to_print)
+        {
+            const session &s = it->second;
+            s.Print();
+            ++it;
+            ++count;
+        }
+    }
+    void PrintHistoryOfSessions()
+    {
+        cout << "\n";
+
+        if (session_id_session_object_map.size() == 0)
+        {
+            cout << "No sessions";
+        }
+
+        for (const auto &pair : session_id_session_object_map)
+        {
+            const session &ses = pair.second;
             ses.Print();
-         }
-         cout <<"\n";
+        }
+        cout << "\n";
     }
 };
 class User
@@ -175,7 +202,7 @@ private:
     string email;
     session current_session;
     // vector<session> historyOfsessions;
-    
+
 public:
     User(const string &line)
     {
@@ -191,22 +218,30 @@ public:
         current_session.session_id_session_object_map.clear();
         current_session.UploadHistoryOfSessions(substr[5]);
     }
-    int GetUserId(){
+    int GetUserId() const
+    {
         return user_id;
     }
-    string GetFullName(){
+    string GetUserName() const
+    {
+    }
+    string GetFullName() const
+    {
         return full_name;
     }
-    string GetPassword(){
+    string GetPassword() const
+    {
         return password;
     }
-    string GetEmail(){
+    string GetEmail() const
+    {
         return email;
     }
-    session GetCurrentSession(){
+    session GetCurrentSession() const
+    {
         return current_session;
     }
-
+    
     void Print() const
     {
         cout << "User " << user_id << ", " << user_name << "," << password << ", " << full_name << ", " << email << "\n";
@@ -215,13 +250,11 @@ public:
     {
         ostringstream oss;
         string str;
-        for (int i = 0; i < historyOfsessions.size(); i++)
+
+        for (const auto &pair : current_session.GetSessionIdFromSessionObj())
         {
-            if (i != 0)
-            {
-                str += ",";
-            }
-            str += historyOfsessions[i].ToString();
+            str += pair.second.ToString();
+            str += ",";
         }
         oss << user_id << ",\"" << full_name << "\"" << "," << user_name << "," << password << "," << email << "[" << str << "]";
         return oss.str();

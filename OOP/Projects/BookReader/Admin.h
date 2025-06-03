@@ -15,6 +15,7 @@ private:
     string email;
 
     vector<int> books_ids_from_admin;
+    //map<int, vector<Book>> adminId_booksObject_map;
 
 public:
     Admin() : admin_id(-1), admin_name(""), password(""), name(""), email("") {}

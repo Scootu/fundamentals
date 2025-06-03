@@ -49,6 +49,26 @@ class Book {
     int GetTotalPageNumber() const {
         return totalPageNumber;
     }
+    void SetBookId(const int& id){
+        book_id = id;
+    }
+    void SetAdminId(const int& id){
+        admin_id = id;
+    }
+    void SetBookTitle(const string& t){
+        title = t;
+    }
+    void SetAuthor(const string& author_){
+         author= author_;
+    }
+    void Print() const {
+        cout <<"Book id"<<book_id<<", Admin id"<<admin_id<<", "<<title<<", "<<author<<", "<<year<<", "<<totalPageNumber<<"\n";
+    }
+    string ToString() const {
+        ostringstream oss;
+        oss << book_id<<","<<admin_id<<","<<title<<","<<author<<","<<year<<","<<totalPageNumber;
+        return oss.str();
+    }
     
 };
 /*

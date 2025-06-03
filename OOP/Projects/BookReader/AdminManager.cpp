@@ -16,16 +16,15 @@ void AdminManager::AccessSystem()
 
 void AdminManager::LoadDatabase()
 {
-   BookManager bookManagerSystem;
    last_id = 0;
-   adminId_bookObject_map.clear();
+   //adminId_bookObject_map.clear();
    adminName_AdminObject_map.clear();
    vector<string> lines = ReadFileLines("AdminList.txt");
    for (auto &line : lines)
    {
       Admin admin(line);
       adminName_AdminObject_map[admin.GetName()] = admin;
-      adminId_booksObject_map[admin.GetAdminId()] = bookManagerSystem.GetlistofBooks(admin.GetBooksIdsFromAdmin());
+      //adminId_booksObject_map[admin.GetAdminId()] = bookManagerSystem.GetlistofBooks(admin);
       last_id = max(last_id, admin.GetAdminId());
    }
 }
