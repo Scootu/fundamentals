@@ -9,6 +9,7 @@
 #include <vector>
 #include <map>
 #include "Helper.cpp"
+#include "Book.h"
 using namespace std;
 
 struct session
@@ -28,19 +29,19 @@ public:
                                                                last_page_number(lpn),
                                                                time_now(time), last_id(0) {} // Initialize 'now' with current time
 
-    const int& GetSessionId() const
+    const int &GetSessionId() const
     {
         return session_id;
     }
-    const int& GetBookId() const
+    const int &GetBookId() const
     {
         return book_id;
     }
-    const int& GetLpn() const
+    const int &GetLpn() const
     {
         return last_page_number;
     }
-    const string& GetTimeKnow() const
+    const string &GetTimeKnow() const
     {
         return time_now;
     }
@@ -65,7 +66,7 @@ public:
         time_now = time;
     }
 
-    void AddNewSession(int bookId, int lpn) // need a bookObj ?
+    void AddNewSession(const Book &book) // need a bookObj ?
     {
         // Get current time
         auto now = chrono::system_clock::now();
@@ -77,7 +78,8 @@ public:
         ostringstream oss;
         oss << put_time(localtime(&now_time), "%Y-%m-%d %H:%M:%S");
         string time_str = oss.str();
-
+        int bookId = book.GetBookId();
+        int lpn = book.GetTotalPageNumber();
         // Create new session with formatted time
         session s(++last_id, bookId, lpn, time_str);
 
@@ -138,7 +140,7 @@ public:
                 ses.SetBookId(book_id);
                 ses.SetLpn(last_page);
                 ses.SetTime(timestamp);
-                last_id = max(last_id,ses.GetSessionId());
+                last_id = max(last_id, ses.GetSessionId());
                 session_id_session_object_map[ses.GetSessionId()] = ses;
             }
         }
@@ -237,43 +239,51 @@ public:
     {
         return email;
     }
-    const session& GetCurrentSession() const
+    const session &GetCurrentSession() const
     {
         return current_session;
     }
-    void SetUserName(const string& user_name_){
+    void SetUserName(const string &user_name_)
+    {
         user_name = user_name_;
     }
-    void SetUserId(const int& id_){
+    void SetUserId(const int &id_)
+    {
         user_id = id;
     }
-    void SetFullName(const string& name){
+    void SetFullName(const string &name)
+    {
         full_name = name;
     }
-    void SetPassword(const string& pass){
+    void SetPassword(const string &pass)
+    {
         password = pass;
     }
-    void SetEmail(const string& e){
+    void SetEmail(const string &e)
+    {
         email = e;
     }
-    void ReadUser(const string &user_name, int id) {
-		SetUserName(user_name);
-		SetUserId(id);
+    void ReadUser(const string &user_name, int id)
+    {
+        SetUserName(user_name);
+        SetUserId(id);
 
-		string str;
+        string str;
 
-		cout << "Enter password: ";
-		cin >> str;
-		SetPassword(str);
+        cout << "Enter password: ";
+        cin >> str;
+        SetPassword(str);
 
-		cout << "Enter name: ";
-		cin >> str;
-		SetFullName(str);
+        cout << "Enter name: ";
+        cin >> str;
+        SetFullName(str);
 
-		cout << "Enter email: ";
-		cin >> str;
-		SetEmail(str);
-	}
+        cout << "Enter email: ";
+        cin >> str;
+        SetEmail(str);
+    }
+
+
 
     void Print() const
     {

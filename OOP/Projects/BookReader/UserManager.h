@@ -4,6 +4,7 @@
 #include "User.h"
 #include "BookManager.h"
 #include "Helper.cpp"
+#include "Book.h"
 class UserManager
 {
 private:
@@ -88,7 +89,21 @@ public:
 
     UpdateDatabase(current_user);
   }
+  void ReadBook(const UserManager &userManager)
+  {
+    int book_id = ReadBookIdAny();
 
+    if (book_id == -1)
+    {
+      return;
+    }
+    const Book &book = BookManagerSystem.GetBookIdToBookObjMap().find(book_id)->second;
+    current_user.GetCurrentSession().AddNewSession(book);
+    }
+  void CreateNewSession(const Book &book)
+  {
+    current_user.GetCurrentSession().AddNewSession(book);
+  }
   void PrintSystemBooks()
   {
     BookManagerSystem.PrintListOfbookSystem();

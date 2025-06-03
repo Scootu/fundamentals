@@ -3,6 +3,7 @@
 
 #include "Book.h"
 #include "Admin.h"
+#include "User.h"
 #include "Helper.cpp"
 #include <map>
 #include <string>
@@ -30,33 +31,56 @@ public:
             booksid_to_BookObject_map[book.GetBookId()] = book;
         }
     }
-    void AddNewBook(const Admin& admin)
+    const map<int,Book>& GetBookIdToBookObjMap(){
+        return booksid_to_BookObject_map;
+    }
+    void AddNewBook(const Admin &admin)
     {
-         //I need the book object to add to a list of map<int, vector<Book>> adminId_booksObject_map; 
-         // do i need that or i just need to update the books_ids_from_admin ?
+        // I need the book object to add to a list of map<int, vector<Book>> adminId_booksObject_map;
+        //  do i need that or i just need to update the books_ids_from_admin ?
+    }
+    int ReadBookIdAny() const
+    {
+        int book_id;
+        cout << "Enter Book id or -1 to cancel: ";
+        cin >> book_id;
+
+        if (book_id == -1)
+            return -1;
+
+        if (!bookid_bookobject_map.count(book_id))
+        {
+            cout << "\nERROR: No book with such ID. Try again\n\n";
+            return ReadQuestionIdAny();
+        }
+        // const Book &book = bookid_bookobject_map.find(book_id)->second;
+
+        return book_id;
     }
 
-    void PrintListOfbookSystem(){
-        for(auto& pair: booksid_to_BookObject_map){
+    void PrintListOfbookSystem()
+    {
+        for (auto &pair : booksid_to_BookObject_map)
+        {
             pair.second.Print();
         }
     }
-    const vector<Book>& GetlistofBooks(const Admin& admin) // This is for an admin
+    const vector<Book> &GetlistofBooks(const Admin &admin) // This is for an admin
     {
         LoadDataBase();
         const vector<int> &books_ids = admin.GetBooksIdsFromAdmin();
         vector<Book> books;
-        for (auto book_id& : books_ids)
+        for (auto book_id & : books_ids)
         {
-            if(!booksid_to_BookObject_map.count(book_id)){
-                cout << "Book id:"<<book_id<<" doen't exist! \n\n";
+            if (!booksid_to_BookObject_map.count(book_id))
+            {
+                cout << "Book id:" << book_id << " doen't exist! \n\n";
                 continue;
             }
             books.push_back(booksid_to_BookObject_map[book_id]);
         }
-       
+
         return books;
     }
-    
 }
 #endif
