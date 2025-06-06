@@ -89,9 +89,9 @@ public:
 
     UpdateDatabase(current_user);
   }
-  void ReadBook(const UserManager &userManager)
+  void ReadBook()
   {
-    int book_id = ReadBookIdAny();
+    int book_id = BookManagerSystem.ReadBookIdAny();
 
     if (book_id == -1)
     {
@@ -100,7 +100,9 @@ public:
     const Book &book = BookManagerSystem.GetBookIdToBookObjMap().find(book_id)->second;
     current_user.GetCurrentSession().AddNewSession(book);
     
-    
+    //Start showing the first page
+    BookManagerSystem.BookReadingFlow(book);
+    //Enter -1 to cancle 1 to move to the next page 0 to previous page 
   }
   /*
   void CreateNewSession(const Book &book)

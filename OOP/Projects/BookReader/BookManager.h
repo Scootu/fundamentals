@@ -31,7 +31,8 @@ public:
             booksid_to_BookObject_map[book.GetBookId()] = book;
         }
     }
-    const map<int,Book>& GetBookIdToBookObjMap(){
+    const map<int, Book> &GetBookIdToBookObjMap()
+    {
         return booksid_to_BookObject_map;
     }
     void AddNewBook(const Admin &admin)
@@ -81,6 +82,39 @@ public:
         }
 
         return books;
+    }
+
+    void BookReadingFlow(const Book &book)
+    {
+        // current_book = book; //?
+        int choise;
+        int current_pagenb = 0;
+        book.ViewPageContent(0); //view first page
+        do
+        {
+
+            cout << "Enter -1 to stop reading 1 to next page 0 to previous page :\n";
+            cin >> choise;
+            while (choise < -1 || choise > 1)
+
+            {
+                cout << "Invalid input, Try another value!\n";
+                cin >> choise;
+            }
+            // show book content
+            if (choise == 1)
+            {
+                book.ViewPageContent(++current_pagenb);
+            }
+            else if (choise == 0)
+            {
+                book.ViewPageContent(--current_pagenb);
+            }
+            else
+            {
+                return;
+            }
+        } while (choise != -1)
     }
 }
 #endif

@@ -9,18 +9,20 @@
 using namespace std;
 namespace fs = filesystem;
 
-class Book {
+class Book
+{
     int book_id;
     string admin_id;
     string title;
     string author;
     int year;
     int totalPageNumber;
-    //vector<pair<string, string>> chapters; // chapter name + content
-    
-    public :
-    Book():year(-1){}
-    Book(const string& line){
+    vector<pair<int, string>> pages; // page content
+
+public:
+    Book() : year(-1) {}
+    Book(const string &line)
+    {
         vector<string> str = SplitString(line);
         assert(str.size() == 6);
         book_id = ToInt(str[0]);
@@ -29,116 +31,153 @@ class Book {
         author = str[3];
         year = str[4];
         totalPageNumber = str[5];
+        // Load pages content
+        LoadBookPagesContent();
     }
 
-    int GetBookId() const {
+    int GetBookId() const
+    {
         return book_id;
     }
-    string GetAdminId() const {
+    string GetAdminId() const
+    {
         return admin_id;
     }
-    string GetBookTitle() const {
+    string GetBookTitle() const
+    {
         return title;
     }
-    string GetAuthor() const {
+    string GetAuthor() const
+    {
         return author;
     }
-    int Getyear() const {
+    int Getyear() const
+    {
         return year;
     }
-    int GetTotalPageNumber() const {
+    int GetTotalPageNumber() const
+    {
         return totalPageNumber;
     }
-    void SetBookId(const int& id){
+    void SetBookId(const int &id)
+    {
         book_id = id;
     }
-    void SetAdminId(const int& id){
+    void SetAdminId(const int &id)
+    {
         admin_id = id;
     }
-    void SetBookTitle(const string& t){
+    void SetBookTitle(const string &t)
+    {
         title = t;
     }
-    void SetAuthor(const string& author_){
-         author= author_;
+    void SetAuthor(const string &author_)
+    {
+        author = author_;
     }
-    void Print() const {
-        cout <<"Book id"<<book_id<<", Admin id"<<admin_id<<", "<<title<<", "<<author<<", "<<year<<", "<<totalPageNumber<<"\n";
+    void Print() const
+    {
+        cout << "Book id" << book_id << ", Admin id" << admin_id << ", " << title << ", " << author << ", " << year << ", " << totalPageNumber << "\n";
     }
-    string ToString() const {
+    string ToString() const
+    {
         ostringstream oss;
-        oss << book_id<<","<<admin_id<<","<<title<<","<<author<<","<<year<<","<<totalPageNumber;
+        oss << book_id << "," << admin_id << "," << title << "," << author << "," << year << "," << totalPageNumber;
         return oss.str();
     }
-    
-};
-/*
-Book parseBookFile(const string& filename) {
-    Book book;
-    ifstream inFile(filename);
-    string line;
-    string currentChapter;
-    string currentContent;
-    
-    if (!inFile.is_open()) {
-        cerr << "Error opening file: " << filename << endl;
-        return book;
-    }
-    
-    while (getline(inFile, line)) {
-        if (line.empty()) continue;
-        
-        // Check for metadata tags
-        if (line.find("[TITLE]") == 0) {
-            book.title = line.substr(7);
-        }
-        else if (line.find("[AUTHOR]") == 0) {
-            book.author = line.substr(8);
-        }
-        else if (line.find("[YEAR]") == 0) {
-            book.year = stoi(line.substr(6));
-        }
-        // Check for chapter markers
-        else if (line.find("[CHAPTER") == 0) {
-            if (!currentChapter.empty()) {
-                book.chapters.emplace_back(currentChapter, currentContent);
-                currentContent.clear();
-            }
-            currentChapter = line;
-        }
-        else {
-            currentContent += line + "\n";
-        }
-    }
-    
-    // Add the last chapter
-    if (!currentChapter.empty()) {
-        book.chapters.emplace_back(currentChapter, currentContent);
-    }
-    
-    inFile.close();
-    return book;
-}
-*/
-/*
-void saveChaptersToFiles(const Book& book, const string& outputDir) {
-    // Create output directory if it doesn't exist
-    fs::create_directory(outputDir);
-    
-    // Save each chapter to a separate file
-    for (size_t i = 0; i < book.chapters.size(); ++i) {
-        string filename = outputDir + "/chapter_" + to_string(i + 1) + ".txt";
-        ofstream outFile(filename);
-        
-        if (outFile.is_open()) {
-            outFile << book.chapters[i].first << "\n\n"; // Chapter title
-            outFile << book.chapters[i].second;          // Chapter content
-            outFile.close();
-            cout << "Saved: " << filename << endl;
-        } else {
-            cerr << "Error creating file: " << filename << endl;
-        }
-    }
-}
 
-*/
+    void LoadBookPagesContent(const string &books_dir = "books")
+    {
+        pages.clear();
+
+        string filename = FindBookContentFile(book_id, books_dir);
+        if (filename.empty())
+        {
+            cerr << "Error: No content file found for book ID " << book_id << endl;
+            return;
+        }
+
+        ifstream inFile(filename);
+        if (!inFile.is_open())
+        {
+            cerr << "Error opening file: " << filename << endl;
+            return;
+        }
+
+        string line;
+        string currentPageContent;
+        int currentPageNumber = 0;
+        bool inPage = false;
+
+        while (getline(inFile, line))
+        {
+            // Trim trailing whitespace
+            size_t endpos = line.find_last_not_of(" \t\r\n");
+            if (endpos != string::npos)
+                line = line.substr(0, endpos + 1);
+            else
+                line.clear();
+
+            if (line.empty())
+                continue;
+
+            // Detect start of a new page
+            if (line.rfind("[PAGE ", 0) == 0)
+            {
+                // Save the previous page if any
+                if (inPage && !currentPageContent.empty())
+                {
+                    pages.emplace_back(currentPageNumber, currentPageContent);
+                    currentPageContent.clear();
+                }
+
+                // Extract page number
+                size_t endBracket = line.find(']');
+                if (endBracket != string::npos)
+                {
+                    try
+                    {
+                        currentPageNumber = stoi(line.substr(6, endBracket - 6));
+                        inPage = true;
+                    }
+                    catch (...)
+                    {
+                        cerr << "Warning: invalid page number in line: " << line << endl;
+                        inPage = false;
+                    }
+                }
+            }
+            // Ignore metadata tags like [TITLE], [AUTHOR], etc.
+            else if (line.rfind("[TITLE]", 0) == 0 || line.rfind("[AUTHOR]", 0) == 0 || line.rfind("[YEAR]", 0) == 0)
+            {
+                continue;
+            }
+            else if (inPage)
+            {
+                // Append line to page content
+                if (!currentPageContent.empty())
+                    currentPageContent += "\n";
+                currentPageContent += line;
+            }
+        }
+
+        // Add the last page if any
+        if (inPage && !currentPageContent.empty())
+        {
+            pages.emplace_back(currentPageNumber, currentPageContent);
+        }
+
+        totalPageNumber = pages.size();
+        inFile.close();
+    }
+
+    // Parse book file and extract pages
+    void ViewPageContent(int pagenb)
+    {
+        assert(pagenb > pages.size());
+        if(pagenb == pages.size()) cout<<"Last page! \n";
+        cout << pages.at(pagenb).second << "\n";
+    }
+};
+
 #endif

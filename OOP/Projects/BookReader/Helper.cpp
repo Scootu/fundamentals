@@ -57,9 +57,11 @@ vector<int> SplitBooksids(const string &str)
     return bookIds;
 }
 
-string Trim(const string& str) {
+string Trim(const string &str)
+{
     size_t first = str.find_first_not_of(" \t");
-    if (string::npos == first) return "";
+    if (string::npos == first)
+        return "";
     size_t last = str.find_last_not_of(" \t");
     return str.substr(first, (last - first + 1));
 }
@@ -96,6 +98,20 @@ vector<string> ReadFileLines(const string &path)
     file_handler.close();
     return lines;
 }
+// Helper to find book content file by ID
+string FindBookContentFile(int book_id, const string &books_dir = "books")
+{
+    for (const auto &entry : fs::directory_iterator(books_dir))
+    {
+        string filename = entry.path().filename().string();
+        if (filename.find("book_" + to_string(book_id)) != string::npos)
+        {
+            return entry.path().string();
+        }
+    }
+    return "";
+}
+
 int ReadInt(int low, int high)
 {
     cout << "\nEnter number in range " << low << " - " << high << ": ";
