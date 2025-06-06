@@ -99,11 +99,15 @@ public:
     }
     const Book &book = BookManagerSystem.GetBookIdToBookObjMap().find(book_id)->second;
     current_user.GetCurrentSession().AddNewSession(book);
-    }
+    
+    
+  }
+  /*
   void CreateNewSession(const Book &book)
   {
     current_user.GetCurrentSession().AddNewSession(book);
   }
+  */
   void PrintSystemBooks()
   {
     BookManagerSystem.PrintListOfbookSystem();
