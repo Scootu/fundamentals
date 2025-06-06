@@ -52,7 +52,7 @@ public:
         if (!bookid_bookobject_map.count(book_id))
         {
             cout << "\nERROR: No book with such ID. Try again\n\n";
-            return ReadQuestionIdAny();
+            return ReadBookIdAny();
         }
         // const Book &book = bookid_bookobject_map.find(book_id)->second;
 
@@ -65,6 +65,14 @@ public:
         {
             pair.second.Print();
         }
+    }
+    const vector<int>& GetListOfBooksIds(){
+        LoadDataBase();
+        vector<int> books_ids;
+        for(auto pair& : booksid_to_BookObject_map){
+            books_ids.push_back(pair.first);
+        }
+        return books_ids;
     }
     const vector<Book> &GetlistofBooks(const Admin &admin) // This is for an admin
     {

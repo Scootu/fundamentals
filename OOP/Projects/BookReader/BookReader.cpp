@@ -1,7 +1,9 @@
 #include "iostream"
 using namespace std;
-
-int main(){
-    
+#include "BookReaderSystem.h"
+int main()
+{
+    BookReaderSystem service;
+    service.Run();
     return 0;
 }

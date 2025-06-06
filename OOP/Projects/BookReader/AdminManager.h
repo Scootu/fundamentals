@@ -13,21 +13,26 @@ private:
     // map<Admin,vector<User>> Adminobject_usersObject_map;
     Admin current_Admin;
     int last_id;
-    map<string,Admin> adminName_AdminObject_map;
+    map<string, Admin> adminName_AdminObject_map;
     BookManager bookManagerSystem;
-    
+
 public:
-   AdminManager();
-   void LoadDatabase();
-   void AccessSystem();
-   void DoLogin();
-   void DoSignUp();
-   void AddNewBook(){
+    AdminManager();
+    void LoadDatabase();
+    void AccessSystem();
+    void DoLogin();
+    void DoSignUp();
+    const Admin& GetCurrentAdmin() const {
+        return current_Admin;
+    }
+    void AddNewBook()
+    {
         bookManagerSystem.AddNewBook(current_Admin);
-   }
-   void UpdateDatabase(const Admin& admin);
-   void ResetBooksIdtoAdmin(const vector<int>& bookIds){ // to Update the books_ids_from_admin
-         current_Admin.ResetBooksIdsFromAdmin(bookIds);
+    }
+    void UpdateDatabase(const Admin &admin);
+    void ResetBooksIdtoAdmin(const vector<int> &bookIds)
+    { // to Update the books_ids_from_admin
+        current_Admin.ResetBooksIdsFromAdmin(bookIds);
     }
 };
 #endif

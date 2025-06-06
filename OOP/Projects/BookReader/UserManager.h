@@ -68,7 +68,9 @@ public:
       break;
     }
   }
-
+  const vector<int> &GetUserBookIds() const
+  {
+  }
   void DoSignUp()
   {
     string user_name;
@@ -87,7 +89,11 @@ public:
     current_user.ReadUser(user_name, ++last_id);
     username_userObject_map[current_user.GetUserName()] = current_user;
 
-    UpdateDatabase(current_user);
+    UpdateDatabase();
+  }
+  const BookManager &GetBookManagerSystem() const
+  {
+    return BookManagerSystem;
   }
   void ReadBook()
   {
@@ -99,10 +105,10 @@ public:
     }
     const Book &book = BookManagerSystem.GetBookIdToBookObjMap().find(book_id)->second;
     current_user.GetCurrentSession().AddNewSession(book);
-    
-    //Start showing the first page
+
+    // Start showing the first page
     BookManagerSystem.BookReadingFlow(book);
-    //Enter -1 to cancle 1 to move to the next page 0 to previous page 
+    // Enter -1 to cancle 1 to move to the next page 0 to previous page
   }
   /*
   void CreateNewSession(const Book &book)
@@ -123,9 +129,9 @@ public:
     current_user.GetCurrentSession().PrintLatestSessions(); // how many times he load & update the data ?
   }
 
-  void UpdateDatabase(const User &user)
+  void UpdateDatabase()
   {
-    string line = user.ToString();
+    string line = current_user.ToString();
     vector<string> lines(1, line);
     WriteFileLines("18_users.txt", lines);
   }

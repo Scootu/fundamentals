@@ -171,11 +171,18 @@ public:
         inFile.close();
     }
 
-    // Parse book file and extract pages
     void ViewPageContent(int pagenb)
     {
-        assert(pagenb > pages.size());
-        if(pagenb == pages.size()) cout<<"Last page! \n";
+        if (pagenb < 0 || pagenb >= static_cast<int>(pages.size()))
+        {
+            throw out_of_range("Invalid page number: " + to_string(pagenb));
+        }
+
+        if (pagenb == static_cast<int>(pages.size()) - 1)
+        {
+            cout << "Last page! \n";
+        }
+
         cout << pages.at(pagenb).second << "\n";
     }
 };
