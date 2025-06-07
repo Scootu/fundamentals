@@ -189,6 +189,8 @@ public:
         if (pagenb == static_cast<int>(pages.size()) - 1)
         {
             cout << "Last page! \n";
+            --pagenb;
+            return;
         }
 
         cout << pages.at(pagenb).second << "\n";

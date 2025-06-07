@@ -29,7 +29,6 @@ public:
     for (const auto &line : lines)
     {
       User user(line);
-      user.Print();
       username_userObject_map[user.GetUserName()] = user;
       last_id = max(last_id, user.GetUserId());
     }
@@ -131,11 +130,6 @@ public:
   }
   void ViewCurrentReadingSessions()
   {
-    cout << "DEBUG: printing session buffer:\n"
-         << current_user.ToString() << "\n";
-    cout << "DEBUG: session map size = "
-         << current_user.GetCurrentSession().GetSessionIdFromSessionObj().size() << "\n";
-
     current_user.ViewCurrentSessionReadingList();
   }
 

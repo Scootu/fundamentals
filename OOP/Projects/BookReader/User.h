@@ -110,7 +110,7 @@ public:
         }
     }
     void LoadHistroyOfSessions(const string &line)
-    {
+    {             
         session_id_session_object_map.clear(); // clear previous entries
 
         string s = line;
@@ -118,10 +118,6 @@ public:
         // Remove outer brackets [ ... ]
         if (!s.empty() && s.front() == '[' && s.back() == ']')
             s = s.substr(1, s.size() - 2);
-
-        // Remove trailing comma if any
-        if (!s.empty() && s.back() == ',')
-            s.pop_back();
 
         size_t start_pos = 0, end_pos = 0;
 
@@ -170,7 +166,7 @@ public:
             ses.SetTime(timestamp);
 
             last_id = max(last_id, session_id);
-
+            
             session_id_session_object_map[session_id] = ses;
         }
     }
@@ -178,7 +174,7 @@ public:
     string ToString() const
     {
         ostringstream oss;
-        oss << "{" << book_id
+        oss << "{" << session_id << "," << book_id
             << "," << last_page_number
             << "," << time_now << "}";
 
@@ -253,7 +249,6 @@ public:
 
         // current_session.GetSessionIdFromSessionObj().clear();
         // LoadHistroyOfSessions(current_session,substr[5]); // Are loading data in the constructor don't prohibited the oop concepts
-        cout << session_buffer << endl;
         current_session.LoadHistroyOfSessions(session_buffer);
     }
     /*
