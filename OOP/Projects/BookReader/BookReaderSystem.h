@@ -25,11 +25,9 @@ private:
         vector<int> book_ids = users_manager.GetBookManagerSystem().GetListOfBooksIds();
         admin_manager.ResetBooksIdtoAdmin(book_ids);
     }
-
-public:
-    void Run()
+    void RunUser()
     {
-        //in case user try to login
+        // in case user try to login
         LoadDatabase(false);
         users_manager.AccessSystem();
         ResetAdminBooksIds(); // why ?
@@ -69,7 +67,59 @@ public:
                 break;
             }
         }
-        Run();
+        RunUser();
+    }
+    void RunAdmin()
+    {
+        LoadDatabase(false);
+        admin_manager.AccessSystem();
+        ResetAdminBooksIds();
+
+        vector<string> menu;
+        menu.push_back("Print my profil information");
+        menu.push_back("Add new book");
+        menu.push_back("View my books list");
+        menu.push_back("Logout");
+
+        while (true)
+        {
+            int choice = showReadMenu(menu);
+            LoadDatabase(true);
+
+            if (choice == 1)
+            {
+                admin_manager.GetCurrentAdmin().Print();
+            }
+            else if (choice == 2)
+            {
+                admin_manager.AddNewBook();
+            }
+            else if (choice == 3)
+            {
+                admin_manager.PrintMyBooksIdsList();
+            }
+            else
+            {
+                break;
+            }
+        }
+        RunAdmin();
+    }
+
+public:
+    void RunSystem()
+    {
+        int choice;
+        cout << "Admin 0 or User 1 ?\n";
+        if (ReadInt(0, 1))
+        {
+            RunUser();
+        }
+        else 
+        {
+            RunAdmin();
+        }
+        RunSystem();
     }
 };
 #endif

@@ -23,7 +23,7 @@ void AdminManager::LoadDatabase()
    for (auto &line : lines)
    {
       Admin admin(line);
-      adminName_AdminObject_map[admin.GetName()] = admin;
+      adminName_AdminObject_map[admin.GetAdminName()] = admin;
       //adminId_booksObject_map[admin.GetAdminId()] = bookManagerSystem.GetlistofBooks(admin);
       last_id = max(last_id, admin.GetAdminId());
    }

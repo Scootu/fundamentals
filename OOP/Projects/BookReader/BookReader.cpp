@@ -4,6 +4,6 @@ using namespace std;
 int main()
 {
     BookReaderSystem service;
-    service.Run();
+    service.RunSystem();
     return 0;
 }

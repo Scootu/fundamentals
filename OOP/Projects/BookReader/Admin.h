@@ -119,7 +119,7 @@ public:
             str += to_string(books_ids_from_admin[i]);
         }
 
-        oss << admin_id << ", \"" << admin_name << "\"," << password << "," << name << "," << email << ",{" << str << "}";
+        oss << admin_id << ", \"" << admin_name << "\"," << password << ",\"" << name << "\"," << email << ",{" << str << "}";
 
         return oss.str();
     }

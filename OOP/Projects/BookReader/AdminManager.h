@@ -3,6 +3,7 @@
 #include "Admin.h"
 #include "Book.h"
 #include <map>
+#include <vector>
 #include "BookManager.h"
 using namespace std;
 
@@ -32,6 +33,13 @@ public:
     void ResetBooksIdtoAdmin(const vector<int> &bookIds)
     { // to Update the books_ids_from_admin
         current_Admin.ResetBooksIdsFromAdmin(bookIds);
+    }
+    void PrintMyBooksIdsList(){
+         const vector<Book> &books = bookManagerSystem.GetlistofBooks(current_Admin);
+
+         for(const auto& book:books){
+            book.Print();
+         }
     }
 };
 #endif
