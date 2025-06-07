@@ -1,4 +1,4 @@
-#ifndef USER
+#ifndef USER_H
 #define USER_H
 
 #include <string>
@@ -8,7 +8,7 @@
 #include <iomanip>
 #include <vector>
 #include <map>
-#include "Helper.cpp"
+#include "Helper.h"
 #include "Book.h"
 using namespace std;
 
@@ -25,6 +25,10 @@ private:
 
 public:
     chrono::system_clock::time_point now; // Store time as a time_point
+    session()
+    {
+        last_id = 0;
+    }
     session(int sessionId, int bookId, int lpn, string time) : session_id(sessionId), book_id(bookId),
                                                                last_page_number(lpn),
                                                                time_now(time), last_id(0) {} // Initialize 'now' with current time
@@ -44,6 +48,9 @@ public:
     const string &GetTimeKnow() const
     {
         return time_now;
+    }
+    void SetSessionId_toSessionObj(int id, session ses)
+    {
     }
     const map<int, session> &GetSessionIdFromSessionObj() const
     {
@@ -79,34 +86,45 @@ public:
         oss << put_time(localtime(&now_time), "%Y-%m-%d %H:%M:%S");
         string time_str = oss.str();
         int bookId = book.GetBookId();
-        int lpn = book.GetTotalPageNumber();
+        int lpn = book.GetLpn(); // is this lpn ?
         // Create new session with formatted time
         session s(++last_id, bookId, lpn, time_str);
 
-        // Store the session (assuming you want to add it to the map)
         session_id_session_object_map[s.GetSessionId()] = s;
         // UpdateDatabase()
     }
+    void LoadFromPreviousSession(); // Another concept
     void Print() const
     {
-        cout << "Session ID: " << session_id << "Book ID: " << book_id
+        cout << "Session ID: " << session_id << ", Book ID: " << book_id
              << ", Last Page: " << last_page_number
              << ", Timestamp: " << time_now << "\n";
     }
-
+    void ResetHistoryOfSessions(const map<int, session> &sessions_ids)
+    {
+        session_id_session_object_map.clear();
+        for (const auto &pair : sessions_ids)
+        {
+            session_id_session_object_map[pair.first] = pair.second;
+            pair.second.Print();
+        }
+    }
     void LoadHistroyOfSessions(const string &line)
     {
+        session_id_session_object_map.clear(); // clear previous entries
 
-        // Extract content between [ ]
         string s = line;
-        if (s.front() == '[' && s.back() == ']')
-        {
-            s = s.substr(1, s.size() - 2);
-        }
 
-        // Split into individual session strings between { }
-        size_t start_pos = 0;
-        size_t end_pos = 0;
+        // Remove outer brackets [ ... ]
+        if (!s.empty() && s.front() == '[' && s.back() == ']')
+            s = s.substr(1, s.size() - 2);
+
+        // Remove trailing comma if any
+        if (!s.empty() && s.back() == ',')
+            s.pop_back();
+
+        size_t start_pos = 0, end_pos = 0;
+
         while ((start_pos = s.find('{', end_pos)) != string::npos)
         {
             end_pos = s.find('}', start_pos);
@@ -115,36 +133,48 @@ public:
 
             string session_str = s.substr(start_pos + 1, end_pos - start_pos - 1);
 
-            // Parse session components
-            vector<string> components;
-            size_t pos = 0;
-            while ((pos = session_str.find(',')) != string::npos)
-            {
-                string token = session_str.substr(0, pos);
-                components.push_back(Trim(token));
-                session_str.erase(0, pos + 1);
-            }
-            components.push_back(Trim(session_str)); // Add last component
+            // Remove trailing comma inside the session if present
+            if (!session_str.empty() && session_str.back() == ',')
+                session_str.pop_back();
 
-            if (components.size() >= 4)
-            {
-                // Create session object (assuming session_id is auto-generated elsewhere)
-                int session_id = ToInt(components[0]);
-                int book_id = ToInt(components[1]);
-                int last_page = ToInt(components[2]);
-                string timestamp = components[3];
+            // Split into exactly 3 parts: session_id, book_id, lpn, and the rest is timestamp
+            size_t p1 = session_str.find(',');
+            size_t p2 = session_str.find(',', p1 + 1);
 
-                // sessions.emplace_back(session_id, book_id, last_page, timestamp);
-                session ses;
-                ses.SetSessionId(session_id);
-                ses.SetBookId(book_id);
-                ses.SetLpn(last_page);
-                ses.SetTime(timestamp);
-                last_id = max(last_id, ses.GetSessionId());
-                session_id_session_object_map[ses.GetSessionId()] = ses;
-            }
+            if (p1 == string::npos || p2 == string::npos)
+                continue;
+
+            string sid_str = Trim(session_str.substr(0, p1));
+            string bid_str = Trim(session_str.substr(p1 + 1, p2 - p1 - 1));
+            string lpn_str = Trim(session_str.substr(p2 + 1)); // this includes timestamp
+
+            // Split lpn and timestamp
+            size_t p3 = lpn_str.find(',');
+            if (p3 == string::npos)
+                continue;
+
+            string lpn_val = Trim(lpn_str.substr(0, p3));
+            string timestamp = Trim(lpn_str.substr(p3 + 1));
+
+            if (sid_str.empty() || bid_str.empty() || lpn_val.empty() || timestamp.empty())
+                continue;
+
+            int session_id = ToInt(sid_str);
+            int book_id = ToInt(bid_str);
+            int last_page = ToInt(lpn_val);
+
+            session ses;
+            ses.SetSessionId(session_id);
+            ses.SetBookId(book_id);
+            ses.SetLpn(last_page);
+            ses.SetTime(timestamp);
+
+            last_id = max(last_id, session_id);
+
+            session_id_session_object_map[session_id] = ses;
         }
     }
+
     string ToString() const
     {
         ostringstream oss;
@@ -154,7 +184,7 @@ public:
 
         return oss.str();
     }
-    void PrintLatestSessions()
+    void PrintLatestSessions() const
     {
         const int max_sessions_to_print = 5; // Print latest 5 sessions
         cout << "\n";
@@ -177,7 +207,7 @@ public:
             ++count;
         }
     }
-    void PrintHistoryOfSessions()
+    void PrintHistoryOfSessions() const
     {
         cout << "\n";
 
@@ -202,23 +232,39 @@ private:
     string full_name;
     string password;
     string email;
+    string session_buffer;
     session current_session;
     // vector<session> historyOfsessions;
 
 public:
+    User() = default;
     User(const string &line)
     {
-        string substr = SplitString(line, ",", true);
+        vector<string> substr = SplitString(line, ",", true);
 
         user_id = ToInt(substr[0]);
         user_name = substr[1];
-        full_name = substr[2];
-        password = substr[3];
+        full_name = substr[3];
+        password = substr[2];
         email = substr[4];
         // historyOfsessions = current_session.GetHistoryOfSessions(substr[5]);
         // initialize session
-        current_session.session_id_session_object_map.clear();
-        current_session.LoadHistroyOfSessions(substr[5]);
+        session_buffer = substr[5];
+
+        // current_session.GetSessionIdFromSessionObj().clear();
+        // LoadHistroyOfSessions(current_session,substr[5]); // Are loading data in the constructor don't prohibited the oop concepts
+        cout << session_buffer << endl;
+        current_session.LoadHistroyOfSessions(session_buffer);
+    }
+    /*
+    void ResetSessionsIdsToSessionObjects(){
+        map<int,session> sessionids_sessionsobject = current_session.LoadHistroyOfSessions(session_buffer);
+        current_session.ResetHistoryOfSessions(sessionids_sessionsobject);
+    }
+    */
+    void ViewCurrentSessionReadingList()
+    {
+        current_session.PrintLatestSessions();
     }
     int GetUserId() const
     {
@@ -226,6 +272,7 @@ public:
     }
     string GetUserName() const
     {
+        return user_name;
     }
     string GetFullName() const
     {
@@ -239,7 +286,7 @@ public:
     {
         return email;
     }
-    const session &GetCurrentSession() const
+    session &GetCurrentSession() // is not const
     {
         return current_session;
     }
@@ -249,7 +296,7 @@ public:
     }
     void SetUserId(const int &id_)
     {
-        user_id = id;
+        user_id = id_;
     }
     void SetFullName(const string &name)
     {
@@ -275,7 +322,7 @@ public:
         SetPassword(str);
 
         cout << "Enter name: ";
-        cin >> str;
+        getline(cin, str);
         SetFullName(str);
 
         cout << "Enter email: ";
@@ -283,11 +330,9 @@ public:
         SetEmail(str);
     }
 
-
-
     void Print() const
     {
-        cout << "User " << user_id << ", " << user_name << "," << password << ", " << full_name << ", " << email << "\n";
+        cout << "User : " << user_id << ", " << user_name << "," << password << ", " << full_name << ", " << email << "\n";
     }
     string ToString() const
     {
@@ -299,7 +344,7 @@ public:
             str += pair.second.ToString();
             str += ",";
         }
-        oss << user_id << ",\"" << full_name << "\"" << "," << user_name << "," << password << "," << email << "[" << str << "]";
+        oss << user_id << "," << user_name << "," << password << ",\"" << full_name << "\"," << email << ",[" << str << "]";
         return oss.str();
     }
 };

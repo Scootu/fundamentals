@@ -1,4 +1,4 @@
-#ifndef BOOK
+#ifndef BOOK_H
 #define BOOK_H
 
 #include <iostream>
@@ -6,17 +6,19 @@
 #include <string>
 #include <vector>
 #include <filesystem> // Requires C++17 or later
+#include <cassert>
 using namespace std;
 namespace fs = filesystem;
 
 class Book
 {
     int book_id;
-    string admin_id;
+    int admin_id;
     string title;
     string author;
     int year;
     int totalPageNumber;
+    int current_page = 0; 
     vector<pair<int, string>> pages; // page content
 
 public:
@@ -29,8 +31,8 @@ public:
         admin_id = ToInt(str[1]);
         title = str[2];
         author = str[3];
-        year = str[4];
-        totalPageNumber = str[5];
+        year = ToInt(str[4]);
+        totalPageNumber = ToInt(str[5]);
         // Load pages content
         LoadBookPagesContent();
     }
@@ -39,7 +41,7 @@ public:
     {
         return book_id;
     }
-    string GetAdminId() const
+    int GetAdminId() const
     {
         return admin_id;
     }
@@ -59,6 +61,12 @@ public:
     {
         return totalPageNumber;
     }
+    int GetLpn() const {
+        return current_page;
+    }
+    void SetLpn(const int& lpn){
+         current_page = lpn;
+    }
     void SetBookId(const int &id)
     {
         book_id = id;
@@ -77,7 +85,7 @@ public:
     }
     void Print() const
     {
-        cout << "Book id" << book_id << ", Admin id" << admin_id << ", " << title << ", " << author << ", " << year << ", " << totalPageNumber << "\n";
+        cout << "Book id: " << book_id << ", Admin id: " << admin_id << ",Title: " << title << ", Author: " << author << ", Year: " << year << ", Total page number: " << totalPageNumber << "\n";
     }
     string ToString() const
     {
@@ -171,7 +179,7 @@ public:
         inFile.close();
     }
 
-    void ViewPageContent(int pagenb)
+    void ViewPageContent(int pagenb) 
     {
         if (pagenb < 0 || pagenb >= static_cast<int>(pages.size()))
         {
@@ -184,6 +192,8 @@ public:
         }
 
         cout << pages.at(pagenb).second << "\n";
+        //Set last page number 
+        SetLpn(pagenb);
     }
 };
 

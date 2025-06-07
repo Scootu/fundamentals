@@ -1,10 +1,9 @@
-#ifndef ADMINMANAGER
+#ifndef ADMINMANAGER_H
 #define ADMINMANAGER_H
 #include "Admin.h"
 #include "Book.h"
 #include <map>
-#include <string>
-
+#include "BookManager.h"
 using namespace std;
 
 class AdminManager

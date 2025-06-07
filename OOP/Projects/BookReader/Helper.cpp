@@ -1,10 +1,5 @@
-#include <vector>
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <sstream>
-using namespace std;
-vector<string> SplitString(const string &str, const string &delimiter = ",", bool isSplitBooksIds = false)
+#include "Helper.h"
+vector<string> SplitString(const string &str, const string &delimiter, bool isSplitBooksIds)
 {
     string s = str;
     vector<string> strs;
@@ -99,12 +94,12 @@ vector<string> ReadFileLines(const string &path)
     return lines;
 }
 // Helper to find book content file by ID
-string FindBookContentFile(int book_id, const string &books_dir = "books")
+string FindBookContentFile(int book_id, const string &books_dir)
 {
     for (const auto &entry : fs::directory_iterator(books_dir))
     {
         string filename = entry.path().filename().string();
-        if (filename.find("book_" + to_string(book_id)) != string::npos)
+        if (filename.find(to_string(book_id)) != string::npos)
         {
             return entry.path().string();
         }

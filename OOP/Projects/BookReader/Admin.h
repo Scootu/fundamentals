@@ -1,9 +1,9 @@
-#ifndef ADMIN
+#ifndef ADMIN_H
 #define ADMIN_H
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Helper.cpp"
+#include "Helper.h"
 using namespace std;
 class Admin
 {

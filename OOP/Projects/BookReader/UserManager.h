@@ -1,10 +1,9 @@
-#ifndef USERMANAGER
+#ifndef USERMANAGER_H
 #define USERMANAGER_H
 
 #include "User.h"
 #include "BookManager.h"
-#include "Helper.cpp"
-#include "Book.h"
+
 class UserManager
 {
 private:
@@ -21,13 +20,16 @@ public:
 
   void LoadDatabase()
   {
+
     last_id = 0;
     username_userObject_map.clear();
 
     vector<string> lines = ReadFileLines("userslist.txt");
+
     for (const auto &line : lines)
     {
       User user(line);
+      user.Print();
       username_userObject_map[user.GetUserName()] = user;
       last_id = max(last_id, user.GetUserId());
     }
@@ -68,9 +70,12 @@ public:
       break;
     }
   }
+  /*
   const vector<int> &GetUserBookIds() const
   {
+    return
   }
+  */
   void DoSignUp()
   {
     string user_name;
@@ -91,7 +96,7 @@ public:
 
     UpdateDatabase();
   }
-  const BookManager &GetBookManagerSystem() const
+  BookManager &GetBookManagerSystem()
   {
     return BookManagerSystem;
   }
@@ -103,12 +108,12 @@ public:
     {
       return;
     }
-    const Book &book = BookManagerSystem.GetBookIdToBookObjMap().find(book_id)->second;
-    current_user.GetCurrentSession().AddNewSession(book);
+    Book book = BookManagerSystem.GetBookIdToBookObjMap().find(book_id)->second;
 
     // Start showing the first page
     BookManagerSystem.BookReadingFlow(book);
     // Enter -1 to cancle 1 to move to the next page 0 to previous page
+    current_user.GetCurrentSession().AddNewSession(book); // To save lpn
   }
   /*
   void CreateNewSession(const Book &book)
@@ -126,14 +131,19 @@ public:
   }
   void ViewCurrentReadingSessions()
   {
-    current_user.GetCurrentSession().PrintLatestSessions(); // how many times he load & update the data ?
+    cout << "DEBUG: printing session buffer:\n"
+         << current_user.ToString() << "\n";
+    cout << "DEBUG: session map size = "
+         << current_user.GetCurrentSession().GetSessionIdFromSessionObj().size() << "\n";
+
+    current_user.ViewCurrentSessionReadingList();
   }
 
   void UpdateDatabase()
   {
     string line = current_user.ToString();
     vector<string> lines(1, line);
-    WriteFileLines("18_users.txt", lines);
+    WriteFileLines("userslist.txt", lines);
   }
   const User &GetcurrentUser() const
   {

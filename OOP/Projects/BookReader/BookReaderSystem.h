@@ -1,4 +1,4 @@
-#ifndef BOOKREADERSYSTEM
+#ifndef BOOKREADERSYSTEM_H
 #define BOOKREADERSYSTEM_H
 
 #include "UserManager.h"
@@ -14,7 +14,7 @@ private:
     {
         users_manager.LoadDatabase();
         admin_manager.LoadDatabase();
-        book_manager.LoadDataBase();
+
         if (fill_admin_ids)
             ResetAdminBooksIds();
     }
@@ -22,16 +22,17 @@ private:
     void ResetAdminBooksIds()
     {
         const Admin &admin = admin_manager.GetCurrentAdmin();
-        const vector<int> &book_ids = users_manager.GetBookManagerSystem().GetListOfBooksIds();
+        vector<int> book_ids = users_manager.GetBookManagerSystem().GetListOfBooksIds();
         admin_manager.ResetBooksIdtoAdmin(book_ids);
     }
 
 public:
     void Run()
     {
+        //in case user try to login
         LoadDatabase(false);
         users_manager.AccessSystem();
-        ResetAdminBooksIds();
+        ResetAdminBooksIds(); // why ?
 
         vector<string> menu;
         menu.push_back("Print my profil information");
@@ -42,7 +43,7 @@ public:
 
         while (true)
         {
-            int choice = showReadMenu();
+            int choice = showReadMenu(menu);
             LoadDatabase(true);
 
             if (choice == 1)
@@ -60,7 +61,7 @@ public:
             else if (choice == 4)
             {
                 users_manager.ReadBook();
-                users_manager.UpdateDatabase();
+                users_manager.UpdateDatabase(); // To save session in userslist.txt
             }
 
             else

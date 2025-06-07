@@ -1,5 +1,5 @@
 #include "AdminManager.h"
-#include "BookManager.h"
+
 
 AdminManager::AdminManager()
 {
@@ -77,7 +77,7 @@ void AdminManager::DoSignUp()
 }
 void AdminManager::UpdateDatabase(const Admin &admin)
 {
-   string line = admin.Tostring();
+   string line = admin.ToString();
    vector<string> lines(1, line);
 
    WriteFileLines("AdminList.txt", lines);

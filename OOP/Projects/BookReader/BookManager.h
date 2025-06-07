@@ -1,13 +1,12 @@
-#ifndef BOOKMANAGER
+#ifndef BOOKMANAGER_H
 #define BOOKMANAGER_H
 
 #include "Book.h"
 #include "Admin.h"
 #include "User.h"
-#include "Helper.cpp"
-#include <map>
-#include <string>
+
 using namespace std;
+
 class BookManager
 {
     int last_id;
@@ -24,7 +23,7 @@ public:
         booksid_to_BookObject_map.clear();
 
         vector<string> lines = ReadFileLines("booklists.txt");
-        for (auto &line : lines)
+        for (const auto &line : lines)
         {
             Book book(line);
             last_id = max(last_id, book.GetBookId());
@@ -49,7 +48,7 @@ public:
         if (book_id == -1)
             return -1;
 
-        if (!bookid_bookobject_map.count(book_id))
+        if (!booksid_to_BookObject_map.count(book_id))
         {
             cout << "\nERROR: No book with such ID. Try again\n\n";
             return ReadBookIdAny();
@@ -61,25 +60,25 @@ public:
 
     void PrintListOfbookSystem()
     {
-        for (auto &pair : booksid_to_BookObject_map)
+        for (const auto& pair : booksid_to_BookObject_map)
         {
             pair.second.Print();
         }
     }
-    const vector<int>& GetListOfBooksIds(){
+    vector<int> GetListOfBooksIds() {
         LoadDataBase();
         vector<int> books_ids;
-        for(auto pair& : booksid_to_BookObject_map){
+        for(const auto& pair : booksid_to_BookObject_map){
             books_ids.push_back(pair.first);
         }
         return books_ids;
     }
-    const vector<Book> &GetlistofBooks(const Admin &admin) // This is for an admin
+    vector<Book> GetlistofBooks(const Admin &admin) // This is for an admin
     {
         LoadDataBase();
         const vector<int> &books_ids = admin.GetBooksIdsFromAdmin();
         vector<Book> books;
-        for (auto book_id & : books_ids)
+        for (const auto& book_id : books_ids)
         {
             if (!booksid_to_BookObject_map.count(book_id))
             {
@@ -92,29 +91,29 @@ public:
         return books;
     }
 
-    void BookReadingFlow(const Book &book)
+    void BookReadingFlow(Book& book)
     {
         // current_book = book; //?
-        int choise;
+        int choice;
         int current_pagenb = 0;
         book.ViewPageContent(0); //view first page
         do
         {
 
             cout << "Enter -1 to stop reading 1 to next page 0 to previous page :\n";
-            cin >> choise;
-            while (choise < -1 || choise > 1)
+            cin >> choice;
+            while (choice < -1 || choice > 1)
 
             {
                 cout << "Invalid input, Try another value!\n";
-                cin >> choise;
+                cin >> choice;
             }
             // show book content
-            if (choise == 1)
+            if (choice == 1)
             {
                 book.ViewPageContent(++current_pagenb);
             }
-            else if (choise == 0)
+            else if (choice == 0)
             {
                 book.ViewPageContent(--current_pagenb);
             }
@@ -122,7 +121,8 @@ public:
             {
                 return;
             }
-        } while (choise != -1)
+        } while (choice != -1);
+        book.SetLpn(current_pagenb);
     }
-}
+};
 #endif
