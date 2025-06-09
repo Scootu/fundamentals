@@ -37,7 +37,7 @@ public:
         // I need the book object to add to a list of map<int, vector<Book>> adminId_booksObject_map;
         //  do i need that or i just need to update the books_ids_from_admin ?
         LoadDataBase();
-        //increament last_id
+        // increament last_id
         ++last_id;
         Book book;
         string str;
@@ -56,7 +56,7 @@ public:
         cin >> currrent_number;
         book.SetTotalPageNumber(currrent_number);
 
-        cout<<"Enter pages content\n";
+        cout << "Enter pages content\n";
         book.SetPagesContent();
         book.SetBookId(last_id);
         book.SetAdminId(admin.GetAdminId());
@@ -64,7 +64,6 @@ public:
         booksid_to_BookObject_map[last_id] = book;
         book.SaveBookDataBase();
         UpdateDatabase(); // UpdateDatabse book
-        
     }
     int ReadBookIdAny() const
     {
@@ -87,9 +86,17 @@ public:
 
     void PrintListOfbookSystem()
     {
-        for (const auto &pair : booksid_to_BookObject_map)
+        if (booksid_to_BookObject_map.size() == 0)
         {
-            pair.second.Print();
+            cout <<"No books";
+        }
+        else
+        {
+
+            for (const auto &pair : booksid_to_BookObject_map)
+            {
+                pair.second.Print();
+            }
         }
     }
     vector<int> GetListOfBooksIds()

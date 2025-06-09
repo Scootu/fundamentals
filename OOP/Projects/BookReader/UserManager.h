@@ -16,6 +16,7 @@ public:
   UserManager()
   {
     last_id = 0;
+    BookManagerSystem.LoadDataBase();
   }
 
   void LoadDatabase()
@@ -44,7 +45,7 @@ public:
   void DoLogin()
   {
     LoadDatabase(); // in case user added from other parallel run
-
+    
     while (true)
     {
       string name, pass;
@@ -113,6 +114,8 @@ public:
     BookManagerSystem.BookReadingFlow(book);
     // Enter -1 to cancle 1 to move to the next page 0 to previous page
     current_user.GetCurrentSession().AddNewSession(book); // To save lpn
+    username_userObject_map[current_user.GetUserName()] = current_user; // udpate the state
+    UpdateDatabase();
   }
   /*
   void CreateNewSession(const Book &book)
