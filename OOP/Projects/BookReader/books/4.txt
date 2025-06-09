@@ -1,0 +1,9 @@
+[TITLE]Hello world
+[AUTHOR]welcoming advice
+[YEAR]2025
+[PAGE 1]
+[CHAPTER 1]
+Hello and welcome this is the best of course am the 
+[PAGE 2]
+[CHAPTER 2]
+this world is amazing 

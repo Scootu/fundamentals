@@ -97,6 +97,8 @@ private:
             }
             else
             {
+                admin_manager.ResetBooksIdtoAdmin(); // it's will clear the previous data in bookslist
+                cout <<"logout \n";
                 break;
             }
         }

@@ -1,2 +1,4 @@
-0,1,Faceless and Voiceless YouTube Channel Ideas for Shy People,2023,2
 1,1,9 Faceless and Voiceless YouTube Channel Ideas for Shy People,Peter Voica,2023,2
+2,1,This Little-Known PDF Parsing Library Will Save Enterprises Millions,Michael Ryaboy,2025,2
+3,1,makup2,cpp,2025,1
+4,3,Hello world,welcoming advice,2025,2

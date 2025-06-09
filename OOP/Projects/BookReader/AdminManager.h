@@ -32,9 +32,9 @@ public:
         adminName_AdminObject_map[current_Admin.GetAdminName()] = current_Admin; // updatedatabase
     }
     void UpdateDatabase();
-    void ResetBooksIdtoAdmin(const vector<int> &bookIds)
+    void ResetBooksIdtoAdmin()
     { // to Update the books_ids_from_admin
-        current_Admin.ResetBooksIdsFromAdmin(bookIds);
+        current_Admin.ResetBooksIdsFromAdmin();
     }
     void PrintMyBooksIdsList()
     {
@@ -50,6 +50,9 @@ public:
                 book.Print();
             }
         }
+    }
+    ~AdminManager(){
+        cout<<"Admin manager destructor!\n";
     }
 };
 #endif

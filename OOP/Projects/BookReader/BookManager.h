@@ -20,7 +20,6 @@ public:
     void LoadDataBase()
     {
         booksid_to_BookObject_map.clear();
-        cout<<"Update bookmanager database !"<<endl;
         vector<string> lines = ReadFileLines("booklists.txt");
         for (const auto &line : lines)
         {

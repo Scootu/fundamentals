@@ -1,0 +1,11 @@
+[TITLE]makup2
+[AUTHOR]cpp
+[YEAR]2025
+[PAGE 1]
+[CHAPTER 1]
+# Upload large pdf file to server (network latency)
+pdf_content = await file.read()
+# Process on server (extremely CPU intensive)
+markdown = extract_text_from_pdf(pdf_content)
+# Return result (more network latency)
+return {"markdown": markdown}
