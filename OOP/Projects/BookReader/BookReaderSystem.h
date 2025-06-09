@@ -10,27 +10,24 @@ private:
     UserManager users_manager;
     AdminManager admin_manager;
 
-    void LoadDatabase(bool fill_admin_ids = false)
+    void LoadDatabase()
     {
         users_manager.LoadDatabase();
         admin_manager.LoadDatabase();
-
-        if (fill_admin_ids)
-            ResetAdminBooksIds();
     }
-
-    void ResetAdminBooksIds()
-    {
-        const Admin &admin = admin_manager.GetCurrentAdmin();
-        vector<int> book_ids = users_manager.GetBookManagerSystem().GetListOfBooksIds();
-        admin_manager.ResetBooksIdtoAdmin(book_ids);
-    }
+   /*
+   void ResetAdminBooksIds()
+   {
+    const Admin &admin = admin_manager.GetCurrentAdmin();
+    vector<int> book_ids = users_manager.GetBookManagerSystem().GetListOfBooksIds();
+    //admin_manager.ResetBooksIdtoAdmin(book_ids);
+}
+*/
     void RunUser()
     {
         // in case user try to login
-        LoadDatabase(false);
+        LoadDatabase();
         users_manager.AccessSystem();
-        ResetAdminBooksIds(); // why ?
 
         vector<string> menu;
         menu.push_back("Print my profil information");
@@ -42,7 +39,7 @@ private:
         while (true)
         {
             int choice = showReadMenu(menu);
-            LoadDatabase(true);
+            LoadDatabase();
 
             if (choice == 1)
             {
@@ -71,9 +68,8 @@ private:
     }
     void RunAdmin()
     {
-        LoadDatabase(false);
+        LoadDatabase();
         admin_manager.AccessSystem();
-        ResetAdminBooksIds();
 
         vector<string> menu;
         menu.push_back("Print my profil information");
@@ -84,7 +80,7 @@ private:
         while (true)
         {
             int choice = showReadMenu(menu);
-            LoadDatabase(true);
+            LoadDatabase();
 
             if (choice == 1)
             {
@@ -93,6 +89,7 @@ private:
             else if (choice == 2)
             {
                 admin_manager.AddNewBook();
+                admin_manager.UpdateDatabase();
             }
             else if (choice == 3)
             {

@@ -1,6 +1,5 @@
 #include "AdminManager.h"
 
-
 AdminManager::AdminManager()
 {
    last_id = 0;
@@ -17,14 +16,14 @@ void AdminManager::AccessSystem()
 void AdminManager::LoadDatabase()
 {
    last_id = 0;
-   //adminId_bookObject_map.clear();
+   // adminId_bookObject_map.clear();
    adminName_AdminObject_map.clear();
    vector<string> lines = ReadFileLines("AdminList.txt");
    for (auto &line : lines)
    {
       Admin admin(line);
       adminName_AdminObject_map[admin.GetAdminName()] = admin;
-      //adminId_booksObject_map[admin.GetAdminId()] = bookManagerSystem.GetlistofBooks(admin);
+      // adminId_booksObject_map[admin.GetAdminId()] = bookManagerSystem.GetlistofBooks(admin);
       last_id = max(last_id, admin.GetAdminId());
    }
 }
@@ -58,27 +57,30 @@ void AdminManager::DoLogin()
 void AdminManager::DoSignUp()
 {
    string admin_name;
-		while (true) {
-			cout << "Enter admin name. (No spaces): ";
-			cin >> admin_name;
+   while (true)
+   {
+      cout << "Enter admin name. (No spaces): ";
+      cin >> admin_name;
 
-			if (adminName_AdminObject_map.count(admin_name))
-				cout << "Already used. Try again\n";
-			else
-				break;
-		}
-		// Move logic to admin class, which may keep extending data members in future
+      if (adminName_AdminObject_map.count(admin_name))
+         cout << "Already used. Try again\n";
+      else
+         break;
+   }
+   // Move logic to admin class, which may keep extending data members in future
 
-		current_Admin.ReadAdmin(admin_name, ++last_id);
-		adminName_AdminObject_map[current_Admin.GetName()] = current_Admin;
+   current_Admin.ReadAdmin(admin_name, ++last_id);
+   adminName_AdminObject_map[current_Admin.GetName()] = current_Admin;
 
-		UpdateDatabase(current_Admin);
-
+   UpdateDatabase();
 }
-void AdminManager::UpdateDatabase(const Admin &admin)
+void AdminManager::UpdateDatabase()
 {
-   string line = admin.ToString();
-   vector<string> lines(1, line);
-
+   vector<string> lines;
+   for (const auto &admin : adminName_AdminObject_map)
+   {
+      string line = admin.second.ToString();
+      lines.push_back(line);
+   }
    WriteFileLines("AdminList.txt", lines);
 }

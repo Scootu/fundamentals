@@ -17,8 +17,8 @@ class Book
     string title;
     string author;
     int year;
-    int totalPageNumber;
-    int current_page = 0; 
+    int totalPageNumber = 0;
+    int current_page = 0;
     vector<pair<int, string>> pages; // page content
 
 public:
@@ -61,11 +61,21 @@ public:
     {
         return totalPageNumber;
     }
-    int GetLpn() const {
+    int GetLpn() const
+    {
         return current_page;
     }
-    void SetLpn(const int& lpn){
-         current_page = lpn;
+    void SetLpn(const int &lpn)
+    {
+        current_page = lpn;
+    }
+    void SetTotalPageNumber(const int &l)
+    {
+        totalPageNumber = l;
+    }
+    void SetYear(const int &y)
+    {
+        year = y;
     }
     void SetBookId(const int &id)
     {
@@ -83,6 +93,39 @@ public:
     {
         author = author_;
     }
+    void SetPagesContent()
+    {
+        string content;
+        string line;
+
+        for (int i = 0; i < totalPageNumber; i++)
+        {
+            cout << "[PAGE " << (i + 1) << "]" << endl;
+            cout << "Enter content (end with '&' on a new line to finish this page):" << endl;
+
+            content.clear(); // Reset content for new page
+
+            while (true)
+            {
+                getline(cin, line);
+
+                // Check for termination character
+                if (line == "&")
+                {
+                    break;
+                }
+
+                // Append the line to content (with newline if not first line)
+                if (!content.empty())
+                {
+                    content += "\n";
+                }
+                content += line;
+            }
+
+            pages.push_back(make_pair(i + 1, content));
+        }
+    }
     void Print() const
     {
         cout << "Book id: " << book_id << ", Admin id: " << admin_id << ",Title: " << title << ", Author: " << author << ", Year: " << year << ", Total page number: " << totalPageNumber << "\n";
@@ -93,7 +136,43 @@ public:
         oss << book_id << "," << admin_id << "," << title << "," << author << "," << year << "," << totalPageNumber;
         return oss.str();
     }
+    void SaveBookDataBase(const string &books_dir = "books")
+    {
+        // Ensure the directory exists (requires C++17)
+        if (!fs::exists(books_dir))
+        {
+            fs::create_directories(books_dir);
+        }
 
+        // File name format: books/book_<book_id>.txt
+        string filename = books_dir + "/" + to_string(book_id) + ".txt";
+        ofstream outFile(filename);
+        if (!outFile.is_open())
+        {
+            cerr << "Error: could not open file for writing: " << filename << endl;
+            return;
+        }
+
+        // Write metadata
+        outFile << "[TITLE]" << title << "\n";
+        outFile << "[AUTHOR]" << author << "\n";
+        outFile << "[YEAR]" << year << "\n";
+
+        // Write pages
+        for (const auto &page : pages)
+        {
+            outFile << "[PAGE " << page.first << "]\n";
+
+            // Optionally, add a chapter header
+            outFile << "[CHAPTER " << page.first << "]\n";
+
+            // Page content
+            outFile << page.second << "\n";
+        }
+
+        outFile.close();
+        cout << "Book saved successfully to: " << filename << "\n";
+    }
     void LoadBookPagesContent(const string &books_dir = "books")
     {
         pages.clear();
@@ -179,7 +258,7 @@ public:
         inFile.close();
     }
 
-    void ViewPageContent(int pagenb) 
+    void ViewPageContent(int pagenb)
     {
         if (pagenb < 0 || pagenb >= static_cast<int>(pages.size()))
         {
@@ -194,7 +273,7 @@ public:
         }
 
         cout << pages.at(pagenb).second << "\n";
-        //Set last page number 
+        // Set last page number
         SetLpn(pagenb);
     }
 };

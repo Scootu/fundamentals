@@ -22,24 +22,34 @@ public:
     void AccessSystem();
     void DoLogin();
     void DoSignUp();
-    const Admin& GetCurrentAdmin() const {
+    const Admin &GetCurrentAdmin() const
+    {
         return current_Admin;
     }
     void AddNewBook()
     {
         bookManagerSystem.AddNewBook(current_Admin);
+        adminName_AdminObject_map[current_Admin.GetAdminName()] = current_Admin; // updatedatabase
     }
-    void UpdateDatabase(const Admin &admin);
+    void UpdateDatabase();
     void ResetBooksIdtoAdmin(const vector<int> &bookIds)
     { // to Update the books_ids_from_admin
         current_Admin.ResetBooksIdsFromAdmin(bookIds);
     }
-    void PrintMyBooksIdsList(){
-         const vector<Book> &books = bookManagerSystem.GetlistofBooks(current_Admin);
-
-         for(const auto& book:books){
-            book.Print();
-         }
+    void PrintMyBooksIdsList()
+    {
+        const vector<Book> &books = bookManagerSystem.GetlistofBooks(current_Admin);
+        if (books.size() == 0)
+        {
+            cout << "No books \n";
+        }
+        else
+        {
+            for (const auto &book : books)
+            {
+                book.Print();
+            }
+        }
     }
 };
 #endif

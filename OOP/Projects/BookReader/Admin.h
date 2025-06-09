@@ -88,10 +88,13 @@ public:
     {
         password = password_;
     }
+    void SetBookIdtoAdminList(int book_id){
+         books_ids_from_admin.push_back(book_id);
+    }
     void Print() const;
     void ReadAdmin(const string &admin_name, int id)
     {
-        SetName(admin_name);
+        SetAdminName(admin_name);
         SetAdminId(id);
 
         string str;
@@ -99,10 +102,10 @@ public:
         cout << "Enter password: ";
         cin >> str;
         SetPassword(str);
-
+        cin.ignore(); 
         cout << "Enter your fullname: ";
-        cin >> str;
-        SetAdminName(str);
+        getline(cin,str); // This did not get the input , where is the problem and i want to enter the full name with space 
+        SetName(str);
     }
     string ToString() const
     {
@@ -119,7 +122,7 @@ public:
             str += to_string(books_ids_from_admin[i]);
         }
 
-        oss << admin_id << ", \"" << admin_name << "\"," << password << ",\"" << name << "\"," << email << ",{" << str << "}";
+        oss << admin_id << "," << admin_name << "," << password << ",\"" << name << "\"," << email << ",{" << str << "}";
 
         return oss.str();
     }

@@ -315,8 +315,8 @@ public:
         cout << "Enter password: ";
         cin >> str;
         SetPassword(str);
-
-        cout << "Enter name: ";
+        cin.ignore();
+        cout << "Enter Full name: ";
         getline(cin, str);
         SetFullName(str);
 

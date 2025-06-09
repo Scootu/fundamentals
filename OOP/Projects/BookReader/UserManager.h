@@ -135,8 +135,13 @@ public:
 
   void UpdateDatabase()
   {
-    string line = current_user.ToString();
-    vector<string> lines(1, line);
+    vector<string> lines;
+    for (const auto &user : username_userObject_map)
+    {
+
+      string line = user.second.ToString();
+      lines.push_back(line);
+    }
     WriteFileLines("userslist.txt", lines);
   }
   const User &GetcurrentUser() const
