@@ -1,0 +1,62 @@
+                +-----------------------+
+                |     IEmailService     |  <<interface>>
+                +-----------------------+
+                | +sendEmail()          |
+                | +downloadEmail()      |
+                +-----------------------+
+                         ▲
+        ┌────────────────┼────────────────────────┐
+        │                │                        │
++----------------+  +----------------------+  +-------------------------------------+
+|  EmailService  |  | EmailServiceWithRetries |  | ThreadSafeEmailService           |
++----------------+  +----------------------+  +-------------------------------------+
+                         ▲                                ▲
+                         │                                │
+                         └────────────┬───────────────────┘
+                                      │
+                      +-------------------------------------------+
+                      | ThreadSafeEmailServiceWithRetries        |
+                      +-------------------------------------------+
+                                      ▲
+                                      │
+                    +---------------------------------+
+                    |   LoggingEmailService           |
+                    +---------------------------------+
+                    | - wrapped: IEmailService        |
+                    +---------------------------------+
+                    | +sendEmail()                    |
+                    | +downloadEmail()                |
+                    +---------------------------------+
+
+interface IEmailService {
+    void sendEmail();
+    void downloadEmail();
+}
+
+// Wrapper for Logging
+class LoggingEmailService implements IEmailService {
+    private IEmailService wrapped;
+
+    public LoggingEmailService(IEmailService wrapped) {
+        this.wrapped = wrapped;
+    }
+
+    public void sendEmail() {
+        System.out.println("LOG: Sending email...");
+        wrapped.sendEmail();
+        System.out.println("LOG: Email sent.");
+    }
+
+    public void downloadEmail() {
+        System.out.println("LOG: Downloading email...");
+        wrapped.downloadEmail();
+        System.out.println("LOG: Email downloaded.");
+    }
+}
+
+IEmailService service1 = new EmailService(); // basic
+IEmailService service2 = new LoggingEmailService(new EmailService()); // basic + logging
+IEmailService service3 = new EmailServiceWithRetries(); // retries only
+IEmailService service4 = new LoggingEmailService(new EmailServiceWithRetries()); // retries + logging
+IEmailService service5 = new LoggingEmailService(new ThreadSafeEmailServiceWithRetries()); // all features
+

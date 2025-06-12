@@ -1,0 +1,22 @@
+What is the problem?
+This is called the Diamond Problem. The issue is:
+
+PoweredDevice is inherited twice — once through Scanner, once through Printer.
+
+This causes ambiguity:
+
+Which version of PoweredDevice's methods or attributes should Copier use?
+
+Two copies of the same base class can be created in memory.
+
+In C++, this can result in code duplication, confusing behavior, or compile-time errors unless handled carefully.
+
+
+
+Advantages of Composition:
+
+Avoids ambiguity.
+
+Better modularity and flexibility.
+
+Aligns better with real-world design.

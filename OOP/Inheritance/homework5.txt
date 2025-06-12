@@ -1,0 +1,30 @@
+Problem Setup:
+You have multiple classes like Robot, Dog, Cat, each with many functions (e.g., 20+).
+You want to create a new class like RobotDog that combines behavior from multiple classes.
+
+The Issue:
+Using inheritance to combine classes can lead to problems:
+
+Ambiguity (e.g., multiple make_sound() methods, a robot dog won't go to toilet ).
+
+Tight coupling.
+
+Fragile code when base classes change.
+
+In some cases, multiple inheritance can cause errors or confusing designs.
+
+Better Approach: Composition
+
+Instead of inheriting from many classes, you use them as member objects.
+
+RobotDog has-a Robot and has-a Dog.
+
+You delegate function calls to those objects.
+
+Benefits of Composition:
+
+Clearer, more flexible design.
+
+Avoids common inheritance problems.
+
+Easier to maintain and extend.
