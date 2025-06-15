@@ -1,0 +1,53 @@
+1/-In the derived class we initialize the base class member variables and functions using the constructor , to prevent initialize non-accessed data members like private member variables , so we initialize using the constructor.
+- Encapsulation & abstraction (calling constructor in initializer list more convenient)
+- the base class constructor initialized first before the derived classes 
+2/- in C++, Friendship is neither inherited nor transitive. what is this mean ? , why friendship functions are not inherited ?  
+friendship in c++ (is non-inheritance ) this mean 
+that if a class is a friend of another class, its derived classes do not automatically inherit that friendship (non-inheritance),(non-transitivity ) : and if class A is a friend of class B, and class B is a friend of class C, then class A is not automatically a friend of class C (non-transitivity).
+
+why Friendship is not inherited 
+Encapsulation violation  (risque of derived class could gain access to private members of a base class unintentionally, violating the principle of encapsulation.
+Unnecessary Complexity 
+Design intent (not what the friendship created for)
+
+why friendship is not Transitive : 
+Trust Model:
+Friendship in C++ is based on a trust relationship. Just because class A is a friend of class B, and class B is a friend of class C, doesn't mean that class A should automatically be a friend of class C. This would create a chain of trust that may not be intended or desirable. 
+Maintainability:
+Transitive friendships would make code harder to maintain and understand. Changes in one class could have unintended consequences in other unrelated classes through the transitive friendship relationship. 
+Security:
+Transitive friendships could create security vulnerabilities by allowing unintended access to private data. 
+
+3/ - Comparing, the set of objects of a base class with its derived classes, which one is bigger? Think Vehicle vs Honda 
+
+the set of objects represented by a base class is larger than the set of objects represented by any of its derived classes. In the example of "Vehicle" and "Honda", the set of all vehicles (including cars, trucks, motorcycles, etc.) is broader than the set of just Honda vehicles. 
+Explanation:
+Base Class (Vehicle):
+A base class, like "Vehicle", defines a general category. It encompasses all objects that share certain fundamental characteristics (e.g., ability to move, transport something).
+Derived Class (Honda):
+A derived class, like "Honda", inherits characteristics from the base class but adds more specific attributes. In this case, "Honda" would represent a specific brand of vehicles, inheriting properties of a vehicle but also including Honda-specific features.
+
+4/ - We know that we don't access private variables, but are they still inherited ?
+5/ - Making variable protected vs public getter/setter for it if needed 
+- Could subclass corrupts the parent class using protected data ?
+- Coupling (dependency) between parent and child ?
+
+https://softwareengineering.stackexchange.com/questions/32727/what-are-invariants-how-can-they-be-used-and-have-you-ever-used-it-in-your-pro 
+
+
+explain using chatAi 
+Coupling:
+- With using protected data members is that derived, class member functions are more likely to be written so that they depend on the base-class implementation. 
+- Derived classes should depend only on the base-class services (i.e., non- private member functions) and not on the base-class implementation. 
+- With protected data members in the base class, if the base-class implementation changes, we may need to modify all derived classes of that base class. 
+- For example, if for some reason we were to change the names of data members firstName and lastName to first and last, 
+- then we’d have to do so for all occurrences in which a derived class references these base-class data members directly. 
+- Such software is said to be fragile or brittle, because a small change in the base class can “break” derived-class implementation. 
+- You should be able to change the base-class implementation while still providing the same services to derived classes. 
+- Of course, if the base-class services change, we must reimplement our derived classes—good object-oriented design attempts to prevent this.
+- From: C++ How to program
+
+
+
+
+
