@@ -1,0 +1,10 @@
+output: 
+Construct Most
+Constructor B
+Constructor Ali
+Constructor C
+~C
+~A
+~B
+~A
+//for c2 is just a pointer -- no object is created 
