@@ -2,9 +2,11 @@
 using namespace std;
 
 class Address {
-    string sender;
-    string receiver;
-    
-    
+    string name;
+    string city;
+    string address;
+    public:
+    Address(string n){
 
+    }
 };
