@@ -4,174 +4,174 @@
 #include <vector>
 using namespace std;
 
-class PayRoll {
+class Payable
+{
 public:
-    virtual PayRoll* Clone() {
+    virtual Payable *Clone()
+    {
         throw logic_error("Not implemented. Do override!");
         return nullptr;
     }
-    virtual void PayMoney(const PayRoll& payObject) {
+    virtual double GetAmountToPay() const
+    {
         throw logic_error("Not implemented!");
     }
-    virtual ~PayRoll() {}
+    virtual ~Payable() {}
 };
 
-class Worker : public PayRoll {
-protected:
-    string username;
+class StaffWorker : public Payable
+{
+private:
+    string name;
+    string address;
 
 public:
-    Worker(const string& name = "") : username(name) {}
+    StaffWorker(const string &name_ = "", const string &address_ = "") : name(name_), address(address_) {}
 
-    virtual string GetName() const {
+    virtual string GetName() const
+    {
         throw logic_error("Not implemented. Override it!");
         return "";
     }
 
-    virtual PayRoll* Clone() override {
+    virtual Payable *Clone() override
+    {
         throw logic_error("Not implemented. Override it!");
         return nullptr;
     }
 
-    virtual ~Worker() {}
+    virtual ~StaffWorker() {}
 };
 
-class Volunteers : public Worker {
+class Volunteers : public StaffWorker
+{
+private:
+    int current_payment;
+
 public:
-    Volunteers(const string& name) : Worker(name) {}
+    Volunteers(const string &name, const string &address_) : StaffWorker(name, address_), current_payment(0) {}
 
-    virtual string GetName() const override {
-        return username;
-    }
-
-    virtual PayRoll* Clone() override {
+    virtual Payable *Clone() override
+    {
         return new Volunteers(*this);
     }
 
-    virtual void PayMoney(const PayRoll& payObject) override {
-        cout << "Volunteer " << GetName() << " is not paid." << endl;
+    virtual double GetAmountToPay() const override
+    {
+        cout << "Volunteers\n";
+        return current_payment;
     }
 };
 
-class Pay {
-public:
-    virtual Pay* Clone() {
-        throw logic_error("Not implemented. Override it!");
-        return nullptr;
-    }
-
-    virtual int GetTotalPaymentPerMonth() const {
-        throw logic_error("Not implemented. Override it!");
-        return -1;
-    }
-
-    virtual int GetTotalPaymentPerDay() const {
-        throw logic_error("Not implemented. Override it!");
-        return -1;
-    }
-
-    virtual ~Pay() {}
-};
-
-class Hourly : public Pay {
+class Employee : public StaffWorker
+{
 private:
-    int pricePerHour;
-    int totalHoursPerDay;
+    int day_to_pay;
 
 public:
-    Hourly(int perHour, int totalHours)
-        : pricePerHour(perHour), totalHoursPerDay(totalHours) {}
+    Employee(const string &name = "", const string &address_ = "") : StaffWorker(name, address_), day_to_pay(0) {}
 
-    virtual Pay* Clone() override {
-        return new Hourly(*this);
-    }
-
-    virtual int GetTotalPaymentPerDay() const override {
-        return pricePerHour * totalHoursPerDay;
-    }
-
-    virtual int GetTotalPaymentPerMonth() const override {
-        return GetTotalPaymentPerDay() * 30;
-    }
-};
-
-class Salary : public Pay {
-private:
-    int dailyAmount;
-
-public:
-    Salary(int amountPerDay) : dailyAmount(amountPerDay) {}
-
-    virtual Pay* Clone() override {
-        return new Salary(*this);
-    }
-
-    virtual int GetTotalPaymentPerMonth() const override {
-        return dailyAmount * 30;
-    }
-
-    virtual int GetTotalPaymentPerDay() const override {
-        return dailyAmount;
-    }
-};
-
-class Employee : public Worker {
-protected:
-    Pay* payType;
-
-public:
-    Employee(const string& name, Pay* payment)
-        : Worker(name), payType(payment) {}
-
-    virtual int GetTotalSalary() const {
-        return payType->GetTotalPaymentPerMonth();
-    }
-
-    virtual void PayMoney(const PayRoll& payObject) override {
-        cout << username << " is paid: " << GetTotalSalary() << " DA" << endl;
-    }
-
-    virtual PayRoll* Clone() override {
+    virtual Payable *Clone() override
+    {
         return new Employee(*this);
     }
 
-    virtual ~Employee() {
-        delete payType;
+    virtual ~Employee() {}
+};
+
+class HourlyEmployee : public Employee
+{
+private:
+    int total_working_hours;
+    double salary_per_hour;
+
+public:
+    HourlyEmployee(int hours = 0, double rate = 0.0) : total_working_hours(hours), salary_per_hour(rate) {}
+
+    virtual double GetAmountToPay() const override
+    {
+        cout << "HourlyEmployee\n";
+        return total_working_hours * salary_per_hour;
+    }
+
+    virtual Payable *Clone() override
+    {
+        return new HourlyEmployee(*this);
     }
 };
 
-class CommissionEmployee : public Employee {
+class SalariedEmployee : public Employee
+{
 private:
-    int ratio;
+    double monthly_salary;
 
 public:
-    CommissionEmployee(const string& name, Pay* payment, int r)
-        : Employee(name, payment), ratio(r) {}
+    SalariedEmployee(double salary = 0.0) : monthly_salary(salary) {}
 
-    void SetRatio(int r) {
-        ratio = r;
+    virtual double GetAmountToPay() const override
+    {
+        cout << "SalariedEmployee\n";
+        return monthly_salary;
     }
 
-    virtual int GetTotalSalary() const override {
-        return payType->GetTotalPaymentPerMonth() * ratio;
+    virtual Payable *Clone() override
+    {
+        return new SalariedEmployee(*this);
+    }
+};
+
+class CommissionEmployee : public SalariedEmployee
+{
+private:
+    double commission_rate;
+    double current_month_sales;
+
+public:
+    CommissionEmployee(double base_salary = 0.0, double rate = 0.0, double sales = 0.0)
+        : SalariedEmployee(base_salary), commission_rate(rate), current_month_sales(sales) {}
+
+    virtual double GetAmountToPay() const override
+    {
+        cout << "CommissionSalariedEmployee\n";
+        return SalariedEmployee::GetAmountToPay() + current_month_sales * commission_rate;
     }
 
-    virtual PayRoll* Clone() override {
+    virtual Payable *Clone() override
+    {
         return new CommissionEmployee(*this);
     }
 };
 
-class Item {
+class Item
+{
 protected:
     string itemName;
     string serialNumber;
+    double price;
+    int quantity;
 
 public:
-    Item() = default;
-    Item(const string& name, const string& serial)
-        : itemName(name), serialNumber(serial) {}
+    Item() : price(0), quantity(0) {}
+    Item(const string &name, const string &serial)
+        : itemName(name), serialNumber(serial), price(0), quantity(0) {}
 
-    virtual Item* Clone() const {
+    double GetPrice() const
+    {
+        return price * quantity;
+    }
+
+    void SetPrice(double p)
+    {
+        price = p;
+    }
+
+    void SetQuantity(int quantity_)
+    {
+        quantity = quantity_;
+    }
+
+    virtual Item *Clone() const
+    {
         throw logic_error("Not implemented. Override it!");
         return nullptr;
     }
@@ -179,85 +179,140 @@ public:
     virtual ~Item() {}
 };
 
-class Book : public Item {
+class Book : public Item
+{
 public:
-    Book(const string& name, const string& serial)
+    Book(const string &name, const string &serial)
         : Item(name, serial) {}
 
-    virtual Item* Clone() const override {
+    virtual Item *Clone() const override
+    {
         return new Book(*this);
     }
 };
 
-class Food : public Item {
+class Food : public Item
+{
 public:
-    Food(const string& name, const string& serial)
+    Food(const string &name, const string &serial)
         : Item(name, serial) {}
 
-    virtual Item* Clone() const override {
+    virtual Item *Clone() const override
+    {
         return new Food(*this);
     }
 };
 
-class Invoice : public PayRoll {
+class Invoice : public Payable
+{
 private:
-    vector<Item*> items;
+    int invoice_id = -1;
+    vector<Item *> items;
 
 public:
-    void AddNewItemToInvoice(const Item& item) {
-        items.push_back(item.Clone());
+    void AddNewItemToInvoice(Item *item)
+    {
+        items.push_back(item->Clone());
     }
 
-    virtual void PayMoney(const PayRoll& payObject) override {
-        cout << "Paying invoice with " << items.size() << " items." << endl;
+    virtual double GetAmountToPay() const override
+    {
+        cout << "Invoice\n";
+        double sum = 0;
+        for (const Item *item_ptr : items)
+            sum += item_ptr->GetPrice();
+
+        return sum;
     }
 
-    virtual PayRoll* Clone() override {
-        Invoice* newInvoice = new Invoice();
-        for (Item* it : items) {
-            newInvoice->AddNewItemToInvoice(*it);
+    virtual Payable *Clone() override
+    {
+        Invoice *newInvoice = new Invoice();
+        for (Item *it : items)
+        {
+            newInvoice->AddNewItemToInvoice(it);
         }
         return newInvoice;
     }
 
-    virtual ~Invoice() {
-        for (auto ptr : items) {
+    virtual ~Invoice()
+    {
+        for (auto ptr : items)
+        {
             delete ptr;
         }
         items.clear();
     }
 };
 
-int main() {
-    // Create polymorphic list of PayRoll*
-    vector<PayRoll*> payrollList;
+class Payroll
+{
+private:
+    vector<Payable *> payables;
 
-    // Add Employee
-    Pay* hourlyPay = new Hourly(150, 8);
-    PayRoll* labourer = new Employee("Ali", hourlyPay);
-    payrollList.push_back(labourer);
-
-    // Add CommissionEmployee
-    Pay* baseSalary = new Salary(2000);
-    PayRoll* sales = new CommissionEmployee("Sara", baseSalary, 2);
-    payrollList.push_back(sales);
-
-    // Add Invoice
-    Invoice* invoice = new Invoice();
-    invoice->AddNewItemToInvoice(Book("C++ Primer", "B123"));
-    invoice->AddNewItemToInvoice(Food("Pizza", "F456"));
-    payrollList.push_back(invoice);
-
-    // Loop over and pay everyone/invoice
-    for (PayRoll* p : payrollList) {
-        p->PayMoney(*p);
+public:
+    void AddPayable(Payable *payable)
+    {
+        payables.push_back(payable->Clone());
     }
 
-    // Clean up memory
-    for (PayRoll* p : payrollList) {
-        delete p;
+    void Pay()
+    {
+        cout << "Payroll::Pay\n";
+        for (const auto payable : payables)
+        {
+            payable->GetAmountToPay();
+        }
     }
+
+    ~Payroll()
+    {
+        for (auto p : payables)
+        {
+            delete p;
+        }
+        payables.clear();
+    }
+};
+
+class Company
+{
+private:
+    Payroll payroll;
+
+public:
+    void Run()
+    {
+        payroll.AddPayable(new Volunteers("John", "123 Street"));
+        payroll.AddPayable(new HourlyEmployee(40, 10.5));
+        payroll.AddPayable(new SalariedEmployee(3000));
+        payroll.AddPayable(new CommissionEmployee(2500, 0.1, 5000));
+
+        Invoice *invoice = new Invoice();
+        Book *book = new Book("C++ Book", "B123");
+        book->SetPrice(50);
+        book->SetQuantity(2);
+        invoice->AddNewItemToInvoice(book);
+
+        Food *food = new Food("Lunch", "F456");
+        food->SetPrice(10);
+        food->SetQuantity(5);
+        invoice->AddNewItemToInvoice(food);
+
+        payroll.AddPayable(invoice);
+
+        payroll.Pay();
+
+        delete invoice;
+        delete book;
+        delete food;
+    }
+};
+
+int main()
+{
+    Company company;
+    company.Run();
 
     return 0;
 }
-
