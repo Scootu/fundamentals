@@ -2,6 +2,8 @@
 #include <string>
 #include <exception>
 #include <vector>
+#include <utility>
+#include <memory>
 using namespace std;
 
 class Payable
@@ -202,14 +204,45 @@ public:
         return new Food(*this);
     }
 };
+class Invoice;
+class ValidationRule
+{
+public:
+    virtual ~ValidationRule() = 0;
+    virtual bool validate(const Invoice* const invoice) const = 0;
+};
+// Add this line after the class:
+ValidationRule::~ValidationRule() {}
+
+class ValidatorGroup
+{
+    protected:
+    vector<ValidationRule *> rules;
+
+public:
+
+    bool virtual validateInvoice(const Invoice* const invoice) const
+    {
+         cout << "Validator\n";
+        for (const auto &rule : rules)
+        {
+              rule->validate(invoice);
+        }
+        return true;
+    }
+
+    virtual ~ValidatorGroup() {}
+};
 
 class Invoice : public Payable
 {
 private:
     int invoice_id = -1;
     vector<Item *> items;
+    ValidatorGroup* validator; //doen't know which validator/rule
 
-public:
+public: 
+    Invoice(ValidatorGroup* validator) : validator(validator) {}
     void AddNewItemToInvoice(Item *item)
     {
         items.push_back(item->Clone());
@@ -227,7 +260,7 @@ public:
 
     virtual Payable *Clone() override
     {
-        Invoice *newInvoice = new Invoice();
+        Invoice *newInvoice = new Invoice(validator);
         for (Item *it : items)
         {
             newInvoice->AddNewItemToInvoice(it);
@@ -245,9 +278,45 @@ public:
     }
 };
 
-class ValidationPayroll: public Payable {
-    
+
+
+class OutOfDateValidationRule : public ValidationRule
+{
+public:
+    bool validate(const Invoice* const invoice) const override
+    {
+        // Implementation to check if invoice is out-of-date
+        // ...
+        return true;
+    }
 };
+
+class TaxAdvantageValidationRule : public ValidationRule
+{
+public:
+    bool validate(const Invoice* const invoice) const override
+    {
+        // Implementaion to check tax advantages
+        // ..
+        return true;
+    };
+};
+
+
+class MandatoryInvoiceValidator : public ValidatorGroup {
+    public:
+     MandatoryInvoiceValidator() { //Could be singleton
+        rules.push_back(new TaxAdvantageValidationRule());
+     }
+};
+class CompleteInvoiceValidator : public ValidatorGroup {
+    public:
+      CompleteInvoiceValidator(){
+        rules.push_back(new OutOfDateValidationRule());
+        rules.push_back(new TaxAdvantageValidationRule());
+     }
+};
+
 class Payroll
 {
 private:
@@ -282,8 +351,20 @@ class Company
 {
 private:
     Payroll payroll;
+    bool is_use_complete_validations = true;
+    ValidatorGroup* validator = nullptr;
 
 public:
+
+
+    Company(){
+        if(is_use_complete_validations){
+            validator = new CompleteInvoiceValidator();
+            
+        }else {
+            validator = new MandatoryInvoiceValidator();
+        }
+    };
     void Run()
     {
         payroll.AddPayable(new Volunteers("John", "123 Street"));
@@ -291,7 +372,7 @@ public:
         payroll.AddPayable(new SalariedEmployee(3000));
         payroll.AddPayable(new CommissionEmployee(2500, 0.1, 5000));
 
-        Invoice *invoice = new Invoice();
+        Invoice *invoice = new Invoice(validator);
         Book *book = new Book("C++ Book", "B123");
         book->SetPrice(50);
         book->SetQuantity(2);
@@ -301,11 +382,11 @@ public:
         food->SetPrice(10);
         food->SetQuantity(5);
         invoice->AddNewItemToInvoice(food);
-
+        
         payroll.AddPayable(invoice);
 
         payroll.Pay();
-
+        validator->validateInvoice(invoice);
         delete invoice;
         delete book;
         delete food;
