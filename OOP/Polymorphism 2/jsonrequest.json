@@ -1,0 +1,12 @@
+{
+    "card-info": {
+        "CCV": 333,
+        "DATE": "09-2021",
+        "ID": "11-22-33-44"
+    },
+    "money": 20.50000,
+    "user_info": [
+        "mostafa",
+        "canada"
+    ]
+}
